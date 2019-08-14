@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="11px" viewBox="0 0 9 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>pec</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.200000003">
+        <g id="1.大屏-框架" transform="translate(-630.000000, -9.000000)" fill="#FFFFFF">
+            <g id="top">
+                <g id="人" transform="translate(630.000000, 4.000000)">
+                    <path d="M2.81378175,10.4816182 C2.02077209,9.94173464 1.5,9.03168374 1.5,8 C1.5,6.34314575 2.84314575,5 4.5,5 C6.15685425,5 7.5,6.34314575 7.5,8 C7.5,9.03168374 6.97922791,9.94173464 6.18621825,10.4816182 C7.83605175,10.9895355 9,12.3910149 9,15.25 C7.2,16.25 1.8,16.25 0,15.25 C0,12.3910149 1.16394825,10.9895355 2.81378175,10.4816182 Z" id="pec"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

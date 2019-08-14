@@ -1,0 +1,12 @@
+const LINE_NUMS = 533
+const BUS_NUMS = 7914
+const PERSON_NUMS = 30063
+const PARK_NUMS = 20
+const STATION_NUMS = 5020
+export {
+    LINE_NUMS,
+    BUS_NUMS,
+    PERSON_NUMS,
+    PARK_NUMS,
+    STATION_NUMS
+}
