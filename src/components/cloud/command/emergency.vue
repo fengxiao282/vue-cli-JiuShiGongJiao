@@ -106,7 +106,7 @@ export default {
 			icon1:icon1,
 			icon2:icon2,
 			show_dang_an:true,
-			show_dang_an_list:true,
+			show_dang_an_list:false,
 			selected_item_info:null,
 			navList:[
 				{name:'突发事件',num:0},
