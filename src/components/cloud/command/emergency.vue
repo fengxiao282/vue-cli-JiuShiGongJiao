@@ -57,8 +57,9 @@
 				</div>
 				<div class="dang-an-title-right" @click="open_dang_an(false,'配置档案')">返回</div>
 			</div>
-			<configArchives v-show="show_dang_an_list"  @showDetails="show_details"></configArchives>
-			<archivesDetaile v-show="!show_dang_an_list" :info="selected_item_info"></archivesDetaile>
+			<configArchives v-if="show_dang_an_list"  @showDetails="show_details"></configArchives>
+			<archivesDetaile v-if="!show_dang_an_list"></archivesDetaile>
+			<!-- <archivesDetaile v-if="!show_dang_an_list" :info="selected_item_info"></archivesDetaile> -->
 		</div>
 
 		<div class="railsupport-bottom"> <!-- bottom -->
@@ -107,7 +108,7 @@ export default {
 			icon2:icon2,
 			show_dang_an:true,
 			show_dang_an_list:false,
-			selected_item_info:null,
+			// selected_item_info:null,
 			navList:[
 				{name:'突发事件',num:0},
 				{name:'大型赛事',num:0},
@@ -138,7 +139,9 @@ export default {
 		open_dang_an(bool,flag){
 			if(flag == "应急预案"){
 				this.show_dang_an = bool;
-
+				
+				// 获取配置档案列表
+				this.$store.dispatch('emergencyPlan/archives_list',null);
 			}else if(flag == "配置档案"){
 
 				if(this.show_dang_an_list){ //当前页：配置档案。返回 -> 应急预案
@@ -151,9 +154,8 @@ export default {
 			}
 		},
 		show_details(selected_item_info){
-			// console.log("selected_item_info--",selected_item_info);
 			this.show_dang_an_list = false;
-			this.selected_item_info = selected_item_info;
+			// this.selected_item_info = selected_item_info;
 		},
 		select(index){
 			if(index == this.selectedIndex){

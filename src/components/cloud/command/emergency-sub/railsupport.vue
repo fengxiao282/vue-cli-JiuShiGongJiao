@@ -23,6 +23,29 @@
 			</div>
 		</div>
 	</div>
+	<!-- 开关视频专用 -->
+	<div @click="openOrClose_video()" class="style-com style-1 color1">
+		<div v-if="videoStatus" class="rotate-com rotate-sector1"></div>
+		<div class="yingJi-item-com"
+			:class="{'selectedStyle yingJi-item-1':videoStatus,
+					 'noSelectedStyle yingJi-item-2':!videoStatus}">
+			<div class="d1-com d1-color1">轨道交通支援</div>
+			<div class="d-com">
+				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
+				<div class="val-1">{{beiHengItem?beiHengItem.lineNum+'条':''}}</div>
+			</div>
+			<div class="d-com">
+				<div class="d-com-title">配套车辆</div>&nbsp;&nbsp;
+				<div class="val-1">{{beiHengItem?beiHengItem.busNum+'辆':''}}</div>
+			</div>
+			<div class="d4">
+				<div class="join-company-com join-company-title">参与公司</div>
+				<span v-if="beiHengItem">
+					<div v-for="(item2,index2) in beiHengItem.joinCompany" :key="index2" class="join-company-com d4-val-2">{{item2}}</div>
+				</span>
+			</div>
+		</div>
+	</div>
 <!-- 其它活动 -->
 	<div v-for="(item,index) in supportList2" :key="index" @click="select(index,item)" class="style-com" :class="{ 'style-1 color1':item.status == '1', 'style-2 color2': item.status != '1' }">
 
@@ -61,11 +84,9 @@ export default {
 	props: {
 		showStatus:Number,
 	},
-	components: {
-		videoStatus:false, //默认关闭
-	},
 	data () {
 		return {
+			videoStatus:false, //默认关闭
 			selectedIndex:-5,
 			selectedIds:[],
 			supportList2:[],
@@ -92,19 +113,28 @@ export default {
 			// 进入应急处置web页方法: 
 			this.$root.$children[0].$children[0].$refs.menu.go2page('command/emergencydisposal', 'web')
 		},
+		openOrClose_video(){
+			this.videoStatus = !this.videoStatus;
+			if(this.videoStatus){
+				eventHub.$emit('yun_videoOpen');
+
+			}else{
+				eventHub.$emit('yun_videoClose');
+			}
+		},
 		select(index,item){
 			item.selectedStatus = !item.selectedStatus;
 
 			// 开关中间地图部分视频
-			if(index == 0){
-				if(item.selectedStatus){
-					eventHub.$emit('yun_videoOpen');
-					this.videoStatus = true;
-				}else{
-					eventHub.$emit('yun_videoClose');
-					this.videoStatus = false;
-				}
-			}
+			// if(index == 0){
+			// 	if(item.selectedStatus){
+			// 		eventHub.$emit('yun_videoOpen');
+			// 		this.videoStatus = true;
+			// 	}else{
+			// 		eventHub.$emit('yun_videoClose');
+			// 		this.videoStatus = false;
+			// 	}
+			// }
 
 			this.supportList2.splice(index,1,item);
 

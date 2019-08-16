@@ -12,19 +12,19 @@
 			<div class="archives-list-header-cell">线路终点</div>
 		</div>
 		<div class="archives-list-container">
-			<div v-for="(item,index) in 10" :key="index" @click="nav_details(item)" class="archives-list-item">
-				<div class="archives-list-item-cell">2019.08.03 08:00</div>
-				<div class="archives-list-item-cell">轨交1号线应急支援</div>
-				<div class="archives-list-item-cell">1号线人民广场</div>
-				<div class="archives-list-item-cell">人民广场</div>
-				<div class="archives-list-item-cell">上海火车站</div>
+			<div v-for="(item,index) in archivesList" :key="index" @click="nav_details(item)" class="archives-list-item">
+				<div class="archives-list-item-cell">{{item.ForMat_Time.time}}</div>
+				<div class="archives-list-item-cell">{{item.itemName}}</div>
+				<div class="archives-list-item-cell">{{item.line}}</div>
+				<div class="archives-list-item-cell">{{item.beginStation}}</div>
+				<div class="archives-list-item-cell">{{item.endStation}}</div>
 			</div>
 		</div>
 	</div>
 </div>
 </template>
 <script>
-// import { mapState,mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'config-archives',
@@ -35,17 +35,57 @@ export default {
 			arror_angle:0,
 		}
 	},
-	mounted(){
+	beforeMount(){
+		// 获取配置档案列表
+		this.$store.dispatch('emergencyPlan/archives_list',null);
 	},
 	methods:{
 		sort_data(){
 			this.arror_angle = (this.arror_angle == 180 ? 0 : 180);
+			this.archivesList.reverse();
 		},
 		nav_details(item){
+			//获取 预案线路详细清单
+			this.$store.dispatch('emergencyPlan/archives_detaile',{"collectionName":"4_1_2_4","uid":item.uid});
+			//切换到预案线路详细清单
 			this.$emit("showDetails",item);
-		}
+		},
+		formatDate(date) { //日期格式化
+			let greenwichTime = new Date(date);
+			let year = greenwichTime.getFullYear();
+
+			let month = greenwichTime.getMonth();
+			let month2 = month < 10 ? `0${month}` : month;
+
+			let dt = greenwichTime.getDate();
+			let dt2 = dt < 10 ? `0${dt}` : dt;
+
+			let hours = greenwichTime.getHours();
+			let hours2 = hours < 10 ? `0${hours}` : hours;
+
+			let minutes = greenwichTime.getMinutes();
+			let minutes2 = minutes < 10 ? `0${minutes}` : minutes;
+
+			return {
+				'time':`${year}.${month2}.${dt2} ${hours2}:${minutes2}`,
+				'timeStamp':greenwichTime.getTime()
+			}
+		},
+		sortDate(arr){
+			return arr.sort(function(a,b){
+				return -a.ForMat_Time.timeStamp + b.ForMat_Time.timeStamp;
+			})
+		},
 	},
 	computed:{
+		...mapGetters("emergencyPlan", ["archives_list"]),
+		archivesList(){
+			let archives_list = this.archives_list;
+			for(let i=0;i<archives_list.length;i++){
+				archives_list[i].ForMat_Time = this.formatDate(archives_list[i].createTime);
+			}
+			return this.sortDate(archives_list);
+		},
 	},
 }
 </script>

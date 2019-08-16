@@ -12,7 +12,9 @@
 		<!-- left -->
 		<div class="left">
 			<div v-for="(item,index) in list1" :key="index" class="item-left">
-				<div class="item-left-left">&nbsp;&nbsp;{{item.address}}</div>
+				<div v-if="item.address.length > 9" class="item-left-left cursor-pointer"
+					@mouseenter="enter(item.address,$event)" @mouseleave='out'>&nbsp;&nbsp;{{item.address}}</div>
+				<div  v-else class="item-left-left">&nbsp;&nbsp;{{item.address}}</div>
 				<div class="item-left-right" :style="{ 'color': item.actMans == item.planMans?'#28EA8D':'#FF3939' }">{{item.actMans}}/{{item.planMans}}</div>
 			</div>
 		</div>
@@ -26,56 +28,119 @@
 				<div class="list-cell-com right-list-cell-5">电台编号</div>
 			</div>
 			<div class="right-list-container">
-				<div v-for="(item,index) in 10" :key="index" class="right-list-item">
-					<div class="list-cell-com right-list-cell-1">一公司</div>
-					<div class="list-cell-com right-list-cell-2">姓名三</div>
-					<div class="list-cell-com right-list-cell-3">职位</div>
-					<div class="list-cell-com right-list-cell-4">上下客点位置</div>
-					<div class="list-cell-com right-list-cell-5">0015</div>
+				<div v-for="(item,index) in reserve_plans[selected_planName]" :key="index" class="right-list-item">
+					<div class="list-cell-com right-list-cell-1">{{item.company}}</div>
+					<div class="list-cell-com right-list-cell-2">{{item.name}}</div>
+					<div class="list-cell-com right-list-cell-3">{{item.office}}</div>
+					<div class="list-cell-com right-list-cell-4">{{item.job}}</div>
+					<div class="list-cell-com right-list-cell-5">{{item.radioCode}}</div>
 				</div>
 			</div>
 		</div>
 
 		<div v-if="show_modal_filter" class="modal-filter">
-			<div v-for="(item,index) in list" :key="index" class="modal-filter-item" :style="{color:index==0?'#008BFF':'#ffffff'}">{{item}}</div>
+			<div class="modal-filter-item"
+			 v-for="(item,index) in plans_name"
+			 :key="index"
+			 :style="{color:item == selected_planName ? '#008BFF' : '#ffffff'}"
+			 @click="shift_planNames(item)">{{item}}</div>
 		</div>
 
 	</div>
 
+	<div id="tip-msg-managerLeft">{{msg}}</div>
 </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
 	name: 'gunLi-shanggang',
 	components: {},
 	data () {
 		return {
-			arror_angle:0,
-			show_modal_filter:true,
-			list:['全部已启动预案','轨交1号线应急支援','轨交2号线应急支援','轨交3号线应急支援','轨交4号线应急支援','轨交5号线应急支援','轨交6号线应急支援'],
+			msg:'',
+			tipDom:{},
+			arror_angle:180,
+			show_modal_filter:false,
+			selected_planName:'全部已启动预案',
+			plans_name:['全部已启动预案'],
 		}
 	},
 	created(){
 		// 现场管理人员上岗 left
 		this.$store.dispatch('emergencyPlan/manager_left',null);
+
+		// 现场管理人员上岗 left
+		this.$store.dispatch('emergencyPlan/manager_right',null);
+	},
+	mounted(){
+		this.tipDom = document.getElementById('tip-msg-managerLeft');
 	},
 	methods:{
+		out(){
+			this.tipDom.style.visibility = 'hidden';
+		},
+		enter(msg,event){
+			this.msg = msg;
+			let cx = event.clientX;
+			let cy = event.clientY - 100;
+
+			this.tipDom.style.left = `${cx}px`;
+			this.tipDom.style.top = `${cy}px`;
+			this.tipDom.style.visibility = 'visible';
+		},
 		filter_data(){
 			this.arror_angle = (this.arror_angle == 180 ? 0 : 180);
 			this.show_modal_filter = !this.show_modal_filter;
 		},
+		shift_planNames(item){
+			this.filter_data();
+			if(this.selected_planName != item){
+				this.selected_planName = item;
+			}
+		},
 	},
 	computed:{
-		...mapState('emergencyPlan',{
-			list1(state){
-				if(state.manager_left){
-					return state.manager_left;
-				}
+		...mapGetters("emergencyPlan", ["manager_left","manager_right"]),
+		list1(){
+			let manager_left = this.manager_left;
+			if(!manager_left){
 				return [];
-			},
-		}),
+			}
+			return manager_left;
+		},
+		reserve_plans(){
+			let manager_right = this.manager_right;
+			if(!manager_right){
+				return [];
+			}
+
+			
+			let reserve_plans = {
+				'全部已启动预案':manager_right
+			};
+
+			//按 预案名 进行数据分类
+			for(let i=0;i<manager_right.length;i++){
+				let item = manager_right[i];
+				let item_name = item.itemName;
+
+				if(!reserve_plans[item_name]){
+					reserve_plans[item_name] = [item];
+
+					//统计 预案名
+					this.plans_name.push(item_name);
+
+				}else{
+					reserve_plans[item_name].push(item);
+
+				}
+
+			}
+			
+			return reserve_plans;
+		}
 	},
 }
 </script>
@@ -123,6 +188,9 @@ export default {
 	padding: 40px;
 	box-sizing: border-box;
 	font-family: PingFangSC-Regular;
+}
+.cursor-pointer{
+	cursor: pointer;
 }
 /* left */
 .left{
@@ -234,7 +302,7 @@ export default {
 	top: 20px;
 	right: 20px;
 	width: 480px;
-	height: 340px;
+	max-height: 340px;
 	background: #000000;
 	border: 1.25px solid #4089FF;
 	box-shadow: 0 0 10px 0 #4089FF;
@@ -256,5 +324,21 @@ export default {
 }
 .modal-filter-item:last-child{
 	margin-bottom: 0;
+}
+#tip-msg-managerLeft{
+	position:fixed;
+	visibility: hidden;
+	background: #000015;
+	box-shadow: 0 0 10px 0 #4089FF;
+	font-family: PingFangSC-Regular;
+	font-size: 40px;
+	color: #4089FF;
+	line-height: 70px;
+	height: 70px;
+	border-radius:4px;
+	padding: 5px 10px;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 999;
 }
 </style>

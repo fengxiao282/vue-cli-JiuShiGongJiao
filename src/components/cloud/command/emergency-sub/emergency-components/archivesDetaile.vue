@@ -99,6 +99,7 @@
 							<span v-for="(item,index) in keyong_cheliang" :key="index" class="item-container-com color-green">
 								{{item}}
 							</span>
+							{{archivesDetaile}}
 						</div>
 					</div>
 				</div>
@@ -109,13 +110,13 @@
 </div>
 </template>
 <script>
-// import { mapState,mapGetters } from 'vuex';
+import { mapState,mapGetters } from 'vuex';
 
 export default {
 	name: 'archives-detaile',
-	props:{
-		info:Number,
-	},
+	// props:{
+	// 	info:Object,
+	// },
 	components: {
 	},
 	data () {
@@ -155,9 +156,6 @@ export default {
 			banGong_position:['四公司一车队','四公司二车队','四公司三车队'],
 			keyong_cheliang:[
 				'S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G',
-				'S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G',
-				'S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G',
-				'S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G','S2L-039G',
 			],
 		}
 	},
@@ -181,6 +179,17 @@ export default {
 		},
 	},
 	computed:{
+		...mapGetters("emergencyPlan", ["archives_detaile"]),
+		archivesDetaile(){
+			let archives_detaile = this.archives_detaile;
+
+			console.log("archives_detaile--",archives_detaile);
+			// if(!archives_detaile){
+			// 	return;
+			// }
+			
+			return archives_detaile;
+		},
 	},
 }
 </script>
