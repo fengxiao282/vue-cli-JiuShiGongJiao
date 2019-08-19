@@ -181,7 +181,7 @@ export default {
 							data[i].joinCompany = [];
 						}else{
 							data[i].joinCompany  = data[i].joinOrg.split(',').map(function(value,index){
-								return value.substr(2);
+								return value.substr(2,3);
 							});
 						}
 
@@ -382,6 +382,7 @@ export default {
 .d4-val-2{
 	box-shadow: inset 0 0 10px 0 #008BFF;
 	border-radius: 10px;
+	overflow: hidden;
 }
 .color1{
 	color: #28EA8D;

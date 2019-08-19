@@ -4,7 +4,7 @@ Vue.use(Router)
 
 // import test from '../components/test.vue';
 // import posAnalysis from '../components//common/thinktank/widgets/passenger-analysis/pos-analysis.vue';
-import exceptionmonitor from '../components/cloud/monitor/widget/exceptionmonitor.vue';
+// import exceptionmonitor from '../components/cloud/monitor/widget/exceptionmonitor.vue';
 // import locomotiveguarantee from '../components/cloud/monitor/widget/locomotiveguarantee.vue';
 // import stationguarantee from '../components/cloud/monitor/widget/stationguarantee.vue';
 import emergency from '../components/cloud/command/emergency.vue';
@@ -28,11 +28,11 @@ export default new Router({
 		// 	path: '/locomotiveguarantee',
 		// 	component:locomotiveguarantee
 		// },
-		{
-			name:'exceptionmonitor',
-			path: '/exceptionmonitor',
-			component:exceptionmonitor
-		},
+		// {
+		// 	name:'exceptionmonitor',
+		// 	path: '/exceptionmonitor',
+		// 	component:exceptionmonitor
+		// },
 		// {
 		// 	name:'posAnalysis',
 		// 	path: '/posAnalysis',

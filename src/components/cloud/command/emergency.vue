@@ -59,7 +59,6 @@
 			</div>
 			<configArchives v-if="show_dang_an_list"  @showDetails="show_details"></configArchives>
 			<archivesDetaile v-if="!show_dang_an_list"></archivesDetaile>
-			<!-- <archivesDetaile v-if="!show_dang_an_list" :info="selected_item_info"></archivesDetaile> -->
 		</div>
 
 		<div class="railsupport-bottom"> <!-- bottom -->
@@ -106,9 +105,8 @@ export default {
 		return {
 			icon1:icon1,
 			icon2:icon2,
-			show_dang_an:true,
-			show_dang_an_list:false,
-			// selected_item_info:null,
+			show_dang_an:false,
+			show_dang_an_list:true,
 			navList:[
 				{name:'突发事件',num:0},
 				{name:'大型赛事',num:0},
@@ -121,20 +119,23 @@ export default {
 		}
 	},
 	mounted(){
-		// 突发事件
-		this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"1"});
-		// 大型赛事
-		this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"2"});
-		// 大型活动
-		this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"3"});
-		// 轨交支援
-		this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"4"});
-		// 驳江支援
-		this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"5"});
+		this.getData();
 	},
 	methods:{
 		shua_xin(){
-			alert("刷新")
+			this.getData();
+		},
+		getData(){
+			// 突发事件
+			this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"1"});
+			// 大型赛事
+			this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"2"});
+			// 大型活动
+			this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"3"});
+			// 轨交支援
+			this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"4"});
+			// 驳江支援
+			this.$store.dispatch('emergencyPlan/railSupport',{"collectionName":"4_1_1_1","type":"5"});
 		},
 		open_dang_an(bool,flag){
 			if(flag == "应急预案"){
@@ -155,7 +156,6 @@ export default {
 		},
 		show_details(selected_item_info){
 			this.show_dang_an_list = false;
-			// this.selected_item_info = selected_item_info;
 		},
 		select(index){
 			if(index == this.selectedIndex){

@@ -1,4 +1,5 @@
 import { httpbase } from '../../../utils/ajax.js';
+import { analog_data } from '../../../store/modules/emergencyPlan/analog_data.js';
 
 let baseUrl = 'http://203.156.246.55:2205/ScreenCenter/getScreenData';
 
@@ -19,7 +20,7 @@ let emergencyPlan = {
         selectedEmergencyevents:[],
         selectedActive:[],
         archives_list:[],
-        archives_detaile:null,
+        archives_detaile:{},
     },
     getters: {
         emergencyevents(state){
@@ -146,7 +147,8 @@ let emergencyPlan = {
             ]
         },
         archives_detaile(state){
-            return state.archives_detaile;
+            // return state.archives_detaile;
+            return analog_data;
         },
     },
     mutations: {
@@ -262,7 +264,7 @@ let emergencyPlan = {
             });
         },
         archives_detaile(context,params){ //预案线路详细清单
-            // console.log('params--',params)
+            console.log('params--',params)
             httpbase(`${baseUrl}`,'POST' , params, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
                 if(res.status == 200){
                     context.commit('archives_detaile', res.data[0]);
