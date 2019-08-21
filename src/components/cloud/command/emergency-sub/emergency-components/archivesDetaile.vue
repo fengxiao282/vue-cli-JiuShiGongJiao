@@ -201,35 +201,35 @@ export default {
 				let init_firstLine_times = true;
 				// 根据 每个 '关联线路' 统计每个 '关联线路' 选项下对应的车辆(编码)
 				for(let n=0;n<single_station_lines.length;n++){
-				let line_name = single_station_lines[n].line;
-				let vno_name = single_station_lines[n].vno;
+					let line_name = single_station_lines[n].line;
+					let vno_name = single_station_lines[n].vno;
 
-				//（2.1）为 '起讫站关联线路' 设置选中初始值。作用:确定 页面首次打开时 '所选线路可用车辆' 的数据是哪条线路下的数据
-				if(init_guanlianline_times){
-					selected_guanlianline = line_name;
-					init_guanlianline_times = false;
-				}
+					//（2.1）为 '起讫站关联线路' 设置选中初始值。作用:确定 页面首次打开时 '所选线路可用车辆' 的数据是哪条线路下的数据
+					if(init_guanlianline_times){
+						selected_guanlianline = line_name;
+						init_guanlianline_times = false;
+					}
 
-				// （2.2）为 guanlian_line 下每个选项添加 first_line，用于保存每个 '范围内起讫站' 站点下第一个 '关联线路'
-				// 用途：在切换 '范围内起讫站' 选项时，重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
-				if(init_firstLine_times){
-					temp_guanlian_lineS[key].first_line = line_name;
-					init_firstLine_times = false;
-				}
-				
+					// （2.2）为 guanlian_line 下每个选项添加 first_line，用于保存每个 '范围内起讫站' 站点下第一个 '关联线路'
+					// 用途：在切换 '范围内起讫站' 选项时，重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
+					if(init_firstLine_times){
+						temp_guanlian_lineS[key].first_line = line_name;
+						init_firstLine_times = false;
+					}
+					
 
-				if(!temp_guanlian_lineS[key].lines[line_name]){
-					//初始化每条线路，并设置每条线路下初始车辆数为1
-					temp_guanlian_lineS[key].lines[line_name] = 1;
+					if(!temp_guanlian_lineS[key].lines[line_name]){
+						//初始化每条线路，并设置每条线路下初始车辆数为1
+						temp_guanlian_lineS[key].lines[line_name] = 1;
 
-					//统计每条线路内对应的车辆
-					temp_guanlian_lineS[key].buses[line_name] = [vno_name];
+						//统计每条线路内对应的车辆
+						temp_guanlian_lineS[key].buses[line_name] = [vno_name];
 
-				}else{
+					}else{
 
-					temp_guanlian_lineS[key].lines[line_name]++;
-					temp_guanlian_lineS[key].buses[line_name].push(vno_name);
-				}
+						temp_guanlian_lineS[key].lines[line_name]++;
+						temp_guanlian_lineS[key].buses[line_name].push(vno_name);
+					}
 				}
 			}
 			// console.log('temp_guanlian_lineS--',temp_guanlian_lineS)

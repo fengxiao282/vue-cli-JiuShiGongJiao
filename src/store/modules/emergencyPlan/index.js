@@ -232,7 +232,7 @@ let emergencyPlan = {
         manager_right(context,params){  //现场管理人员上岗计划  right
             httpbase(`${baseUrl}/4_1_1_7`,'get' , params)().then(function(res){
                 if(res.status == 200){
-                    // console.log('管理人员上岗计划right--',res.data);
+                    console.log('管理人员上岗计划right--',res.data);
                     context.commit('manager_right', res.data);
                 }
             },function(err){
@@ -257,7 +257,8 @@ let emergencyPlan = {
         archives_list(context,params){ //配置档案
             httpbase(`${baseUrl}/4_1_2_3`,'get' , null)().then(function(res){
                 if(res.status == 200){
-                    context.commit('archives_list', res.data[0]);
+                    console.log('配置档案--',res.data);
+                    context.commit('archives_list', res.data);
                 }
             },function(err){
                 console.log(err);
@@ -267,6 +268,7 @@ let emergencyPlan = {
             console.log('params--',params)
             httpbase(`${baseUrl}`,'POST' , params, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
                 if(res.status == 200){
+                    console.log('预案线路详细清单--',res.data[0]);
                     context.commit('archives_detaile', res.data[0]);
                 }
             },function(err){
