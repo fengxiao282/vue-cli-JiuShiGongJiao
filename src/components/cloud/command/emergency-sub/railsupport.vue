@@ -9,7 +9,7 @@
 			<div class="d1-com d1-color1">北横轨道交通支援</div>
 			<div class="d-com">
 				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
-				<div class="val-1">{{beiHengItem?beiHengItem.lineNum+'条':''}}</div>
+				<div class="val-1">{{beiHengItem?beiHengItem.lineNum:''}}</div>
 			</div>
 			<div class="d-com">
 				<div class="d-com-title">配套车辆</div>&nbsp;&nbsp;
@@ -32,7 +32,7 @@
 			<div class="d1-com d1-color1">轨道交通支援</div>
 			<div class="d-com">
 				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
-				<div class="val-1">{{beiHengItem?beiHengItem.lineNum+'条':''}}</div>
+				<div class="val-1">{{beiHengItem?beiHengItem.lineNum:''}}</div>
 			</div>
 			<div class="d-com">
 				<div class="d-com-title">配套车辆</div>&nbsp;&nbsp;
@@ -60,7 +60,7 @@
 				:class="{ 'd1-color1':item.status == '1', 'd1-color2': item.status != '1' }">{{item.itemName}}</div>
 			<div class="d-com">
 				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
-				<div class="val-1">{{item.lineNum}}条</div>
+				<div class="val-1">{{item.lineNum}}</div>
 			</div>
 			<div class="d-com">
 				<div class="d-com-title">配套车辆</div>&nbsp;&nbsp;
@@ -68,7 +68,10 @@
 			</div>
 			<div class="d4">
 				<div class="join-company-com join-company-title">参与公司</div>
-				<div v-for="(item2,index2) in item.joinCompany" :key="index2" class="join-company-com d4-val-2">{{item2}}</div>
+				<div v-for="(item2,index2) in item.joinCompany"
+				:key="index2"
+				class="join-company-com d4-val-2"
+				:class="{'height-style':is_includes(item.itemId,item2)}">{{item2}}</div>
 			</div>
 		</div>
 	</div>
@@ -108,6 +111,13 @@ export default {
 	mounted(){
 	},
 	methods:{
+		is_includes(id,name){
+			if(this.involving_companies[id] && this.involving_companies[id].includes(name)){
+				return true;
+			}else{
+				return false;
+			}
+		},
 		navTo(){
 			// this.selectedIndex = -1;
 			// 进入应急处置web页方法: 
@@ -135,7 +145,8 @@ export default {
 			// 		this.videoStatus = false;
 			// 	}
 			// }
-
+			
+			//通过 splice 更新选项( splice可以响应式改变 )
 			this.supportList2.splice(index,1,item);
 
 			//发送已经启动项
@@ -185,10 +196,10 @@ export default {
 							});
 						}
 
-						//统计已启动项
-						// if(data[i].status == "1"){
-						// 	qiDong.push(data[i].itemId);
-						// }
+						//统计已启动项itemId，用于请求 4.1.1.4 统计每条已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
+						if(data[i].status == "1"){
+							qiDong.push(data[i].itemId);
+						}
 
 						//设置选项选中默认状态,默认未选中
 						data[i].selectedStatus = false;
@@ -202,6 +213,9 @@ export default {
 						}
 					}
 
+					// 请求 4.1.1.4 统计每条已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
+					this.$store.dispatch('emergencyPlan/railsupport_buses',qiDong);
+
 					//发送已经启动项
 					// if(qiDong.length){
 					// 	this.$store.dispatch('emergencyLineBus/loopGetLines',qiDong);
@@ -214,6 +228,34 @@ export default {
 				return [];
 			},
 		}),
+		...mapGetters("emergencyPlan", ["railsupport_buses"]),
+		involving_companies(){
+			let railsupport_buses = this.railsupport_buses;
+			if(!railsupport_buses.length){
+				return false;
+			}
+
+			//统计已启动线路应急支援车辆所属公司有哪些，在界面上高亮有车辆投入的公司
+			// console.log('railsupport_buses--',railsupport_buses)
+			let buses_involving_companies = {}; //存放已启动线路应急支援车辆所属公司
+			let len = railsupport_buses.length;
+
+			for(let i=0;i<len;i++){
+
+				let line_itemId = railsupport_buses[i].itemId;
+				buses_involving_companies[line_itemId] = [];
+
+				let list_item = railsupport_buses[i].list;
+				for(let j=0;j<list_item.length;j++){
+					if(list_item[j].company != "集团全部"){
+						buses_involving_companies[line_itemId].push(list_item[j].company.substr(2,3));
+					}
+				}
+
+			}
+			console.log('buses_involving_companies--',buses_involving_companies)
+			return buses_involving_companies;
+		},
 	},
 }
 </script>
@@ -395,5 +437,9 @@ export default {
 	width: 0;
 	overflow: hidden;
 	visibility: hidden;
+}
+.height-style{
+	box-shadow: inset 0 0 10px 0 #28EA8D;
+	border: 1px solid #28EA8D;
 }
 </style>

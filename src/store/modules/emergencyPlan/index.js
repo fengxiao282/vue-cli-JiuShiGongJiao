@@ -1,4 +1,5 @@
 import { httpbase } from '../../../utils/ajax.js';
+import axios from 'axios'
 import { analog_data } from '../../../store/modules/emergencyPlan/analog_data.js';
 
 let baseUrl = 'http://203.156.246.55:2205/ScreenCenter/getScreenData';
@@ -12,6 +13,11 @@ let emergencyPlan = {
         active:[],
         railsupport:[],
         guojiangSupport:[],
+        emergencyevents_buses:[], //
+        majorevents_buses:[],
+        active_buses:[],
+        railsupport_buses:[],
+        guojiangSupport_buses:[],
         manager_left:[],
         manager_right:[],
         selectedRailsupport:[], //选中项
@@ -20,7 +26,8 @@ let emergencyPlan = {
         selectedEmergencyevents:[],
         selectedActive:[],
         archives_list:[],
-        archives_detaile:{},
+        archives_detaile:null,
+        lineConfigDetailInfo: {},
     },
     getters: {
         emergencyevents(state){
@@ -37,6 +44,21 @@ let emergencyPlan = {
         },
         guojiangSupport(state){
             return state.guojiangSupport;
+        },
+        emergencyevents_buses(state){ //
+            return state.emergencyevents_buses;
+        },
+        majorevents_buses(state){
+            return state.majorevents_buses;
+        },
+        active_buses(state){
+            return state.active_buses;
+        },
+        railsupport_buses(state){
+            return state.railsupport_buses;
+        },
+        guojiangSupport_buses(state){
+            return state.guojiangSupport_buses;
         },
         manager_left(state){
             return state.manager_left;
@@ -167,6 +189,21 @@ let emergencyPlan = {
         guojiangSupport(state,data){
             state.guojiangSupport = data;
         },
+        emergencyevents_buses(state,data){ //
+            state.emergencyevents_buses = data;
+        },
+        majorevents_buses(state,data){ //
+            state.majorevents_buses = data;
+        },
+        active_buses(state,data){ //
+            state.active_buses = data;
+        },
+        railsupport_buses(state,data){ //
+            state.railsupport_buses = data;
+        },
+        guojiangSupport_buses(state,data){ //
+            state.guojiangSupport_buses = data;
+        },
         manager_left(state,data){
             state.manager_left = data;
         },
@@ -194,6 +231,10 @@ let emergencyPlan = {
         archives_detaile(state,data){
             state.archives_detaile = data;
         },
+        resetlineConfigDetailInfo(state,data){
+            // state.archives_detaile = data;
+            state.lineConfigDetailInfo = analog_data
+        },
 	},
 	actions: {
         railSupport(context,params){  //应急预案
@@ -219,6 +260,106 @@ let emergencyPlan = {
                 console.log(err);
             });
         },
+        emergencyevents_buses(context,params){  //请求 4.1.1.4 统计突发事件已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
+            let num = 0;
+            let tempArr  = [];
+            let len = params.length;
+            for(let i = 0; i<len; i++){
+                httpbase(`${baseUrl}`,'POST' , {"collectionName":'4_1_1_4',"itemId":params[i]}, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
+                    if(res.status == 200){
+                        if(res.data.length){
+                            tempArr.push(res.data[0]);
+                        }
+                        num++;
+                        if(num == len){
+                            context.commit("emergencyevents_buses", tempArr);
+                        }
+                    }
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
+        majorevents_buses(context,params){  //同上，大型赛事
+            let num = 0;
+            let tempArr  = [];
+            let len = params.length;
+            for(let i = 0; i<len; i++){
+                httpbase(`${baseUrl}`,'POST' , {"collectionName":'4_1_1_4',"itemId":params[i]}, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
+                    if(res.status == 200){
+                        if(res.data.length){
+                            tempArr.push(res.data[0]);
+                        }
+                        num++;
+                        if(num == len){
+                            context.commit("majorevents_buses", tempArr);
+                        }
+                    }
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
+        active_buses(context,params){  //同上，大型活动
+            let num = 0;
+            let tempArr  = [];
+            let len = params.length;
+            for(let i = 0; i<len; i++){
+                httpbase(`${baseUrl}`,'POST' , {"collectionName":'4_1_1_4',"itemId":params[i]}, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
+                    if(res.status == 200){
+                        if(res.data.length){
+                            tempArr.push(res.data[0]);
+                        }
+                        num++;
+                        if(num == len){
+                            context.commit("active_buses", tempArr);
+                        }
+                    }
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
+        railsupport_buses(context,params){  //同上，轨交支援
+            let num = 0;
+            let tempArr  = [];
+            let len = params.length;
+            for(let i = 0; i<len; i++){
+                httpbase(`${baseUrl}`,'POST' , {"collectionName":'4_1_1_4',"itemId":params[i]}, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
+                    if(res.status == 200){
+                        if(res.data.length){
+                            tempArr.push(res.data[0]);
+                        }
+                        num++;
+                        if(num == len){
+                            context.commit("railsupport_buses", tempArr);
+                        }
+                    }
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
+        guojiangSupport_buses(context,params){  //同上，驳江支援
+            let num = 0;
+            let tempArr  = [];
+            let len = params.length;
+            for(let i = 0; i<len; i++){
+                httpbase(`${baseUrl}`,'POST' , {"collectionName":'4_1_1_4',"itemId":params[i]}, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
+                    if(res.status == 200){
+                        if(res.data.length){
+                            tempArr.push(res.data[0]);
+                        }
+                        num++;
+                        if(num == len){
+                            context.commit("guojiangSupport_buses", tempArr);
+                        }
+                    }
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
         manager_left(context,params){  //现场管理人员上岗 left
             // httpbase(`${baseUrl}/4_2_1`,'get' , params)().then(function(res){
             httpbase(`http://zh.84000.com.cn:27888/bimp-base-bigData/requestData.do?modularName=BigScreen&keyName=getExpoFieldManageInfo`,'get' , params)().then(function(res){
@@ -232,7 +373,7 @@ let emergencyPlan = {
         manager_right(context,params){  //现场管理人员上岗计划  right
             httpbase(`${baseUrl}/4_1_1_7`,'get' , params)().then(function(res){
                 if(res.status == 200){
-                    console.log('管理人员上岗计划right--',res.data);
+                    // console.log('管理人员上岗计划right--',res.data);
                     context.commit('manager_right', res.data);
                 }
             },function(err){
@@ -257,8 +398,7 @@ let emergencyPlan = {
         archives_list(context,params){ //配置档案
             httpbase(`${baseUrl}/4_1_2_3`,'get' , null)().then(function(res){
                 if(res.status == 200){
-                    console.log('配置档案--',res.data);
-                    context.commit('archives_list', res.data);
+                    context.commit('archives_list', res.data[0]);
                 }
             },function(err){
                 console.log(err);
@@ -268,7 +408,6 @@ let emergencyPlan = {
             console.log('params--',params)
             httpbase(`${baseUrl}`,'POST' , params, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
                 if(res.status == 200){
-                    console.log('预案线路详细清单--',res.data[0]);
                     context.commit('archives_detaile', res.data[0]);
                 }
             },function(err){

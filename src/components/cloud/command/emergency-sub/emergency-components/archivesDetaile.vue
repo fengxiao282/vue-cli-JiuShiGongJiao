@@ -153,7 +153,7 @@ export default {
 				this.selected_guanlianline = this.end_data.selected_guanlianline;
 			}
 		},
-		shift_XXX(stations_begin_or_end,buses_begin_or_end,offices_begin_or_end){
+		construct_data(stations_begin_or_end,buses_begin_or_end,offices_begin_or_end){  //构造特定格式数据 begin_data 与 end_data
 			//（1.1）根据 起讫站 将数据分类存储到 temp_stations
 			let temp_stations = {};
 			let not_remove_repeat_companies = []; //未去重的 company 统计数组。用于统计 '涉及公司'
@@ -342,7 +342,8 @@ export default {
 			let buses_begin = sit_begin_msg.buses;
 			let offices_begin = sit_begin_msg.offices;
 
-			let begin_data = this.shift_XXX(stations_begin,buses_begin,offices_begin);
+			//构造特定格式数据 begin_data，便于页面切换展示不同数据（begin_data 与 end_data）
+			let begin_data = this.construct_data(stations_begin,buses_begin,offices_begin);
 			this.selected_qiqizhan = begin_data.selected_qiqizhan;
 			this.selected_guanlianline = begin_data.selected_guanlianline;
 			this.begin_data = begin_data;
@@ -353,9 +354,10 @@ export default {
 			let buses_end = sit_end_msg.buses;
 			let offices_end = sit_end_msg.offices;
 
-			let end_data = this.shift_XXX(stations_end,buses_end,offices_end);
+			//构造特定格式数据 end_data，便于页面切换展示不同数据（begin_data 与 end_data）
+			let end_data = this.construct_data(stations_end,buses_end,offices_end);
 			this.end_data = end_data;
-			
+
 			this.showData = begin_data;
 			return archives_detaile;
 		},

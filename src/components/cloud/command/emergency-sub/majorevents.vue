@@ -21,7 +21,8 @@
 			</div>
 			<div class="d4">
 				<div class="join-company-com join-company-title">参与公司</div>
-				<div v-for="(item2,index2) in item.joinCompany" :key="index2" class="join-company-com d4-val-2">{{item2}}</div>
+				<div v-for="(item2,index2) in item.joinCompany" :key="index2" class="join-company-com d4-val-2"
+				:class="{'height-style':is_includes(item.itemId,item2)}">{{item2}}</div>
 			</div>
 		</div>
 	</div>
@@ -58,6 +59,13 @@ export default {
 	mounted(){
 	},
 	methods:{
+		is_includes(id,name){
+			if(this.involving_companies[id] && this.involving_companies[id].includes(name)){
+				return true;
+			}else{
+				return false;
+			}
+		},
 		select(index,item){
 			item.selectedStatus = !item.selectedStatus;
 			this.supportList2.splice(index,1,item);
@@ -103,15 +111,18 @@ export default {
 							});
 						}
 
-						//统计已启动项
-						// if(data[i].status == "1"){
-						// 	qiDong.push(data[i].itemId);
-						// }
+						//统计已启动项itemId，用于请求 4.1.1.4 统计每条已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
+						if(data[i].status == "1"){
+							qiDong.push(data[i].itemId);
+						}
 
 						//设置选项选中默认状态,默认未选中
 						data[i].selectedStatus = false;
 
 					}
+
+					// 请求 4.1.1.4 统计每条已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
+					this.$store.dispatch('emergencyPlan/majorevents_buses',qiDong);
 
 					//发送已经启动项
 					// if(qiDong.length){
@@ -123,6 +134,33 @@ export default {
 				return [];
 			},
 		}),
+		...mapGetters("emergencyPlan", ["majorevents_buses"]),
+		involving_companies(){
+			let majorevents_buses = this.majorevents_buses;
+			if(!majorevents_buses.length){
+				return false;
+			}
+
+			//统计已启动线路应急支援车辆所属公司有哪些，在界面上高亮有车辆投入的公司
+			console.log('majorevents_buses--',majorevents_buses)
+			let buses_involving_companies = {}; //存放已启动线路应急支援车辆所属公司
+			let len = majorevents_buses.length;
+
+			for(let i=0;i<len;i++){
+
+				let line_itemId = majorevents_buses[i].itemId;
+				buses_involving_companies[line_itemId] = [];
+
+				let list_item = majorevents_buses[i].list;
+				for(let j=0;j<list_item.length;j++){
+					if(list_item[j].company != "集团全部"){
+						buses_involving_companies[line_itemId].push(list_item[j].company.substr(2,3));
+					}
+				}
+
+			}
+			return buses_involving_companies;
+		},
 	},
 }
 </script>
@@ -303,5 +341,9 @@ export default {
 	width: 0;
 	overflow: hidden;
 	visibility: hidden;
+}
+.height-style{
+	box-shadow: inset 0 0 10px 0 #28EA8D;
+	border: 1px solid #28EA8D;
 }
 </style>
