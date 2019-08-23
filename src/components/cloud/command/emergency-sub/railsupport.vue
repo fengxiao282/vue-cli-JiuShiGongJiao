@@ -146,7 +146,7 @@ export default {
 			// 	}
 			// }
 			
-			//通过 splice 更新选项( splice可以响应式改变 )
+			//通过 splice 更新选项( splice响应式改变supportList2内属性值 )
 			this.supportList2.splice(index,1,item);
 
 			//发送已经启动项
