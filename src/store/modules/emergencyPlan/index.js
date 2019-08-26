@@ -64,73 +64,7 @@ let emergencyPlan = {
             return state.manager_left;
         },
         manager_right(state){
-            // return state.manager_right;
-            return [
-                {
-                    "company":"一公司",		
-                    "name":"姓名1",				
-                    "job":"上下客点位置",
-                    "office":"职位1",
-                    "radioCode":"001",
-                    "itemName":"轨交1号线应急支援"
-                },
-                {
-                    "company":"一公司",		
-                    "name":"姓名2",				
-                    "job":"上下客点位置",
-                    "office":"职位2",
-                    "radioCode":"002",
-                    "itemName":"轨交1号线应急支援"
-                },
-                {
-                    "company":"一公司",		
-                    "name":"姓名3",				
-                    "job":"上下客点位置",
-                    "office":"职位3",
-                    "radioCode":"003",
-                    "itemName":"轨交1号线应急支援"
-                },
-                {
-                    "company":"二公司",		
-                    "name":"姓名4",				
-                    "job":"上下客点位置",
-                    "office":"职位4",
-                    "radioCode":"004",
-                    "itemName":"轨交2号线应急支援"
-                },
-                {
-                    "company":"二公司",
-                    "name":"姓名5",				
-                    "job":"上下客点位置",
-                    "office":"职位5",
-                    "radioCode":"005",
-                    "itemName":"轨交2号线应急支援"
-                },
-                {
-                    "company":"二公司",		
-                    "name":"姓名6",				
-                    "job":"上下客点位置",
-                    "office":"职位6",
-                    "radioCode":"006",
-                    "itemName":"轨交2号线应急支援"
-                },
-                {
-                    "company":"二公司",		
-                    "name":"姓名7",				
-                    "job":"上下客点位置",
-                    "office":"职位7",
-                    "radioCode":"007",
-                    "itemName":"轨交2号线应急支援"
-                },
-                {
-                    "company":"二公司",		
-                    "name":"姓名8",				
-                    "job":"上下客点位置",
-                    "office":"职位8",
-                    "radioCode":"008",
-                    "itemName":"轨交2号线应急支援"
-                },
-            ]
+            return state.manager_right;
         },
         selectedRailsupport(state){
             return state.selectedRailsupport;

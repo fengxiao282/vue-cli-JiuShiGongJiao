@@ -29,7 +29,7 @@
 			</div>
 			<div class="right-list-container">
 				<div v-for="(item,index) in reserve_plans[selected_planName]" :key="index" class="right-list-item">
-					<div class="list-cell-com right-list-cell-1">{{item.company}}</div>
+					<div class="list-cell-com right-list-cell-1">{{item.show_company}}</div>
 					<div class="list-cell-com right-list-cell-2">{{item.name}}</div>
 					<div class="list-cell-com right-list-cell-3">{{item.office}}</div>
 					<div class="list-cell-com right-list-cell-4">{{item.job}}</div>
@@ -121,11 +121,15 @@ export default {
 				'全部已启动预案':manager_right
 			};
 
-			//按 预案名 进行数据分类
+			//（1.1）公司名字截取处理	（1.2）按 预案名 进行数据分类
 			for(let i=0;i<manager_right.length;i++){
 				let item = manager_right[i];
-				let item_name = item.itemName;
 
+				//（1.1）公司名字截取处理
+				item.show_company  = item.company.substr(2,3);
+
+				//（1.2）按 预案名 进行数据分类
+				let item_name = item.itemName;
 				if(!reserve_plans[item_name]){
 					reserve_plans[item_name] = [item];
 
@@ -279,6 +283,7 @@ export default {
 	line-height: 80px;
 	text-align: center;
 	flex-grow:1;
+	overflow: hidden;
 }
 .right-list-cell-1{
 	width: 120px;
@@ -287,7 +292,7 @@ export default {
 	width: 120px;
 }
 .right-list-cell-3{
-	width: 80px;
+	width: 85px;
 }
 .right-list-cell-4{
 	width: 240px;
@@ -321,9 +326,6 @@ export default {
 	box-sizing: border-box;
 	padding-left: 40px;
 	cursor: pointer;
-}
-.modal-filter-item:last-child{
-	margin-bottom: 0;
 }
 #tip-msg-managerLeft{
 	position:fixed;

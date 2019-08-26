@@ -168,11 +168,11 @@ export default {
 				
 				for(let j=0;j<buses_begin_or_end.length;j++){
 
-				if(stations_item.name == buses_begin_or_end[j].station){
-					temp_stations[stations_item.name].push(buses_begin_or_end[j])
-				}
+					if(stations_item.name == buses_begin_or_end[j].station){
+						temp_stations[stations_item.name].push(buses_begin_or_end[j])
+					}
 
-				not_remove_repeat_companies.push(buses_begin_or_end[j].company);
+					not_remove_repeat_companies.push(buses_begin_or_end[j].company);
 
 				}
 				
@@ -233,6 +233,19 @@ export default {
 				}
 			}
 			// console.log('temp_guanlian_lineS--',temp_guanlian_lineS)
+
+			/* （1.3）判断 stations_begin_or_end 中是否有数据，无数据时后台返回数据如下：
+				let stations_begin_or_end = [
+					{
+						"name":"",
+						"lnglat":[],
+						"busNum":""
+					}
+				]
+			*/
+			if(stations_begin_or_end.length && !stations_begin_or_end[0].name){
+				stations_begin_or_end = [];
+			}
 
 			let begin_or_end_data = {
 				"selected_qiqizhan":selected_qiqizhan,  		//'范围内起讫站' 初始选中项
