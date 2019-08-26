@@ -80,7 +80,10 @@ export default {
 	computed:{
 		...mapGetters("emergencyPlan", ["archives_list"]),
 		archivesList(){
-			let archives_list = this.archives_list;
+			let archives_list = JSON.parse(JSON.stringify(this.archives_list));
+			if(!archives_list.length){
+				return [];
+			}
 			for(let i=0;i<archives_list.length;i++){
 				archives_list[i].ForMat_Time = this.formatDate(archives_list[i].createTime);
 			}

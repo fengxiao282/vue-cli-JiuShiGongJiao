@@ -82,25 +82,7 @@ let emergencyPlan = {
             return state.selectedActive;
         },
         archives_list(state){
-            // return state.archives_list;
-            return [
-                {
-                    "uid":"档案id",
-                    "itemName":"轨交1号线应急支援",
-                    "line":"1号线人民广场",
-                    "beginStation":"人民广场",
-                    "endStation":"上海火车站",
-                    "createTime":"2019-7-01 10:30:00"
-                },
-                {
-                    "uid":"档案id",
-                    "itemName":"轨交2号线应急支援",
-                    "line":"2号线人民广场",
-                    "beginStation":"人民广场",
-                    "endStation":"上海火车站",
-                    "createTime":"2019-8-16 10:30:00"
-                }
-            ]
+            return state.archives_list;
         },
         archives_detaile(state){
             // return state.archives_detaile;
@@ -332,7 +314,7 @@ let emergencyPlan = {
         archives_list(context,params){ //配置档案
             httpbase(`${baseUrl}/4_1_2_3`,'get' , null)().then(function(res){
                 if(res.status == 200){
-                    context.commit('archives_list', res.data[0]);
+                    context.commit('archives_list', res.data);
                 }
             },function(err){
                 console.log(err);

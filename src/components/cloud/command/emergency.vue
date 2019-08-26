@@ -141,8 +141,6 @@ export default {
 			if(flag == "应急预案"){
 				this.show_dang_an = bool;
 				
-				// 获取配置档案列表
-				this.$store.dispatch('emergencyPlan/archives_list',null);
 			}else if(flag == "配置档案"){
 
 				if(this.show_dang_an_list){ //当前页：配置档案。返回 -> 应急预案
