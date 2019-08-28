@@ -54,7 +54,7 @@ export default {
 				this.$store.dispatch('emergencyLineBus/loopGetLines',arr);
 				this.$store.dispatch('emergencyLineBus/loopGetBuses',arr);
 			}
-		}
+		},
 	},
 	mounted(){
 	},
@@ -84,7 +84,7 @@ export default {
 			} else {
 				this.selectedIds.push(itemId);
 			}
-			this.sendSelectedIds();
+			// this.sendSelectedIds(); //通过 watch 触发 sendSelectedIds 方法
 		},
 		sendSelectedIds(){ //发送并且存储已经启动项
 			this.$store.dispatch('emergencyLineBus/loopGetLines',this.selectedIds);
@@ -131,6 +131,13 @@ export default {
 					// 	this.$store.dispatch('emergencyLineBus/loopGetLines',qiDong);
 					// 	this.$store.dispatch('emergencyLineBus/loopGetBuses',qiDong);
 					// }
+
+					// 点击刷新按钮后重置选中项 selectedIds 并通过 watch 通知使用此数据的组件。存储
+					this.selectedIds = [];
+					setTimeout(()=>{
+						this.sendSelectedIds();
+					},0);
+
 					return data;
 				}
 				return [];

@@ -85,8 +85,8 @@ let emergencyPlan = {
             return state.archives_list;
         },
         archives_detaile(state){
-            // return state.archives_detaile;
-            return analog_data;
+            return state.archives_detaile;
+            // return analog_data;
         },
     },
     mutations: {

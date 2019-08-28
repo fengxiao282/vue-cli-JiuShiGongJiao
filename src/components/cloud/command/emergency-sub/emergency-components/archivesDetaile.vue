@@ -4,10 +4,10 @@
 		<!-- left -->
 		<div class="archives-detaile-left">
 			<div class="detaile-left-1">线路配置信息</div>
-			<div class="detaile-left-com1"><span class="fontColor1">线路编号</span> &nbsp; {{archivesDetaile.lineCode}}</div>
-			<div class="detaile-left-com1"><span class="fontColor1">线路名称</span> &nbsp; {{archivesDetaile.line}}</div>
-			<div class="detaile-left-com1"><span class="fontColor1">开始时间</span> &nbsp; {{archivesDetaile.createTime}}</div>
-			<div class="detaile-left-com1"><span class="fontColor1">结束时间</span> &nbsp; {{archivesDetaile.endTime}}</div>
+			<div class="detaile-left-com1"><span class="fontColor1">线路编号</span> &nbsp; -</div>
+			<div class="detaile-left-com1"><span class="fontColor1">线路名称</span> &nbsp; <span>{{archivesDetaile.line}}</span></div>
+			<div class="detaile-left-com1"><span class="fontColor1">开始时间</span> &nbsp; {{archivesDetaile.show_createTime}}</div>
+			<div class="detaile-left-com1"><span class="fontColor1">结束时间</span> &nbsp; -</div>
 
 			<div class="detaile-left-com2 detaile-left-6"
 			:class="{'detaile-delected-6':delected_start}"
@@ -55,7 +55,7 @@
 
 					<div class="bottom-left-2">
 						<div class="archives-aaa-bbb fontColor1">范围内起讫站</div>
-						<div class="archives-ccc-ddd">
+						<div class="archives-ccc-ddd" v-if="!!selected_qiqizhan">
 							<span class="item-container-com cursor-pointert"
 								v-for="(item,index) in showData.stations"
 								:key="index"
@@ -70,7 +70,7 @@
 
 					<div class="bottom-left-3">
 						<div class="archives-aaa-bbb fontColor1">起讫站关联线路</div>
-						<div class="archives-ccc-ddd">
+						<div class="archives-ccc-ddd" v-if="!!selected_qiqizhan">
 							<span class="item-container-com cursor-pointert"
 								v-for="(value,key,index) in showData.guanlian_line[selected_qiqizhan].lines"
 								:key="index"
@@ -93,7 +93,7 @@
 					</div>
 					<div class="bottom-right-2">
 						<div class="archives-eee-fff fontColor1">所选线路可用车辆</div>
-						<div class="archives-ccc-ddd">
+						<div class="archives-ccc-ddd" v-if="!!selected_qiqizhan && !!selected_guanlianline">
 							<span class="item-container-com color-green"
 								v-for="(value,key,index) in showData.guanlian_line[selected_qiqizhan].buses[selected_guanlianline]"
 							 	:key="index">
@@ -152,6 +152,42 @@ export default {
 				this.selected_qiqizhan = this.end_data.selected_qiqizhan;
 				this.selected_guanlianline = this.end_data.selected_guanlianline;
 			}
+		},
+		shift_qiQiZhang(item,index){
+			if(this.qiQiZhang_selected_index != index){
+				this.qiQiZhang_selected_index = index;
+				this.guanLianLine_selected_index = 0; //重置 '起讫站关联线路' 选项
+
+				let qiqizhan_name = item.name; //获取选中的 '范围内起讫站' 站点名
+				this.selected_qiqizhan = qiqizhan_name;
+
+				//重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
+				this.selected_guanlianline = this.showData.guanlian_line[qiqizhan_name].first_line;
+			}
+		},
+		shift_guanLianLine(value,key,index){
+			if(this.guanLianLine_selected_index != index){
+				this.guanLianLine_selected_index = index;
+				this.selected_guanlianline = key;
+			}
+		},
+		formatDate(date) { //日期格式化
+			let greenwichTime = new Date(date);
+			// let year = greenwichTime.getFullYear();
+
+			let month = greenwichTime.getMonth();
+			let month2 = month < 10 ? `0${month}` : month;
+
+			let dt = greenwichTime.getDate();
+			let dt2 = dt < 10 ? `0${dt}` : dt;
+
+			let hours = greenwichTime.getHours();
+			let hours2 = hours < 10 ? `0${hours}` : hours;
+
+			let minutes = greenwichTime.getMinutes();
+			let minutes2 = minutes < 10 ? `0${minutes}` : minutes;
+
+			return `${month2}.${dt2} ${hours2}:${minutes2}`;
 		},
 		construct_data(stations_begin_or_end,buses_begin_or_end,offices_begin_or_end){  //构造特定格式数据 begin_data 与 end_data
 			//（1.1）根据 起讫站 将数据分类存储到 temp_stations
@@ -237,15 +273,21 @@ export default {
 			/* （1.3）判断 stations_begin_or_end 中是否有数据，无数据时后台返回数据如下：
 				let stations_begin_or_end = [
 					{
-						"name":"",
+						"name":null,
 						"lnglat":[],
 						"busNum":""
 					}
 				]
 			*/
-			if(stations_begin_or_end.length && !stations_begin_or_end[0].name){
-				stations_begin_or_end = [];
-			}
+			// for(let h = stations_begin_or_end.length - 1; h>=0; h--){
+			// 	if(!stations_begin_or_end[h].name){
+			// 		stations_begin_or_end.splice(h,1);
+			// 	}
+			// }
+			
+			// console.log("stations--",stations_begin_or_end)
+			// console.log("guanlian_line--",temp_guanlian_lineS)
+			// console.log("最后--")
 
 			let begin_or_end_data = {
 				"selected_qiqizhan":selected_qiqizhan,  		//'范围内起讫站' 初始选中项
@@ -256,34 +298,30 @@ export default {
 				"offices":offices_begin_or_end,
 			};
 			return begin_or_end_data;
-		},
-		shift_qiQiZhang(item,index){
-			if(this.qiQiZhang_selected_index != index){
-				this.qiQiZhang_selected_index = index;
-				this.guanLianLine_selected_index = 0; //重置 '起讫站关联线路' 选项
-
-				let qiqizhan_name = item.name; //获取选中的 '范围内起讫站' 站点名
-				this.selected_qiqizhan = qiqizhan_name;
-
-				//重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
-				this.selected_guanlianline = this.showData.guanlian_line[qiqizhan_name].first_line;
-			}
-		},
-		shift_guanLianLine(value,key,index){
-			if(this.guanLianLine_selected_index != index){
-				this.guanLianLine_selected_index = index;
-				this.selected_guanlianline = key;
-			}
-		},
+		},		
 	},
 	computed:{
 		...mapGetters("emergencyPlan", ["archives_detaile"]),
 		archivesDetaile(){
 			let archives_detaile = this.archives_detaile;
 			if(!archives_detaile){
-				return;
+				return {
+					"uid":"",
+					"itemName":"",
+					"line":"",
+					"createTime":"",
+					"beginStation":"",
+					"beginPoint":"",
+					"beginRange":"",
+					"endStation":"",
+					"endPoint":"",
+					"endRange":"",
+				};
 			}
-
+			if(archives_detaile.createTime){
+				archives_detaile.show_createTime = this.formatDate(archives_detaile.createTime);
+			}
+			
 	/*
 		begin_data / end_data 最终处理完毕后数据格式如下:
 		{
@@ -385,6 +423,8 @@ export default {
 	align-items: center;
 	width: 100%;
 	height: 1080px;
+	font-size: 40px;
+	color: #fff;
 	font-family: PingFangSC-Regular;
 }
 .archives-detaile-body{
@@ -427,6 +467,7 @@ export default {
 	margin-bottom: 25px;
 	box-sizing: border-box;
 	padding-left: 40px;
+	overflow: hidden;
 }
 .detaile-left-com2{
 	display: flex;
@@ -530,8 +571,17 @@ export default {
 	line-height: 75px;
 }
 .bottom-left-1-sheji-gongsi-list{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-content:flex-start;
+	flex-wrap: wrap;
 	height: 50%;
 	line-height: 75px;
+	overflow: auto;
+}
+.bottom-left-1-sheji-gongsi-list::-webkit-scrollbar{
+	display: none;
 }
 .bottom-left-1:last-child{
 	margin-right: 0;

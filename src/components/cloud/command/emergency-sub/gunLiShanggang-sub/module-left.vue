@@ -33,7 +33,7 @@
 					<div class="list-cell-com right-list-cell-2">{{item.name}}</div>
 					<div class="list-cell-com right-list-cell-3">{{item.office}}</div>
 					<div class="list-cell-com right-list-cell-4">{{item.job}}</div>
-					<div class="list-cell-com right-list-cell-5">{{item.radioCode}}</div>
+					<div class="list-cell-com right-list-cell-5">{{item.radioCode == 'null'?'':item.radioCode}}</div>
 				</div>
 			</div>
 		</div>
@@ -292,7 +292,7 @@ export default {
 	width: 120px;
 }
 .right-list-cell-3{
-	width: 85px;
+	width: 135px;
 }
 .right-list-cell-4{
 	width: 240px;

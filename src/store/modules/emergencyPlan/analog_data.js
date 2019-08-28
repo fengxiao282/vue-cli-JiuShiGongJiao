@@ -190,8 +190,8 @@ let analog_data = {
 	"endStation":"上海过车站",
 	"endPoint":"121.32301,32.325631",
   "endRange":"2",
-  "lineCode":'0802', //加线路编号
-  "endTime":"-",  //加结束时间
+  // "lineCode":'0802', //加线路编号
+  // "endTime":"-",  //加结束时间
 	//起点信息
 	"begin":{
     "companyNum":"3",

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
-// import test from '../components/test.vue';
+import test from '../components/test.vue';
 // import posAnalysis from '../components//common/thinktank/widgets/passenger-analysis/pos-analysis.vue';
 // import exceptionmonitor from '../components/cloud/monitor/widget/exceptionmonitor.vue';
 // import locomotiveguarantee from '../components/cloud/monitor/widget/locomotiveguarantee.vue';
@@ -38,14 +38,14 @@ export default new Router({
 		// 	path: '/posAnalysis',
 		// 	component:posAnalysis
 		// },
-		// {	
-		// 	name:'test',
-		// 	path: '/test',
-		// 	component:test
-		// },
+		{	
+			name:'test',
+			path: '/test',
+			component:test
+		},
 		{
 			path: '/',
-			redirect:'/emergency'
+			redirect:'/test'
 		}
 	],
 });
