@@ -99,7 +99,6 @@ export default {
 			supportList(state){
 				if(state.majorevents.length){
 					let data = JSON.parse(JSON.stringify(state.majorevents[0].supportList));
-					this.supportList2 = data;
 
 					let qiDong = [];
 					for(let i=0;i<data.length;i++){
@@ -138,6 +137,7 @@ export default {
 						this.sendSelectedIds();
 					},0);
 
+					this.supportList2 = data;
 					return data;
 				}
 				return [];

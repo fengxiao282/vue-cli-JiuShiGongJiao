@@ -182,7 +182,6 @@ export default {
 			supportList(state){
 				if(state.railsupport.length){
 					let data = JSON.parse(JSON.stringify(state.railsupport[0].supportList));
-					this.supportList2 = data;
 					// console.log(data);
 
 					let qiDong = [];
@@ -230,7 +229,8 @@ export default {
 					setTimeout(()=>{
 						this.sendSelectedIds();
 					},0);
-
+					
+					this.supportList2 = data;
 					return data;
 				}
 				return [];
@@ -242,26 +242,25 @@ export default {
 			if(!railsupport_buses.length){
 				return false;
 			}
-
 			//统计已启动线路应急支援车辆所属公司有哪些，在界面上高亮有车辆投入的公司
 			// console.log('railsupport_buses--',railsupport_buses)
 			let buses_involving_companies = {}; //存放已启动线路应急支援车辆所属公司
-			let len = railsupport_buses.length;
+			// let len = railsupport_buses.length;
 
-			for(let i=0;i<len;i++){
+			// for(let i=0;i<len;i++){
 
-				let line_itemId = railsupport_buses[i].itemId;
-				buses_involving_companies[line_itemId] = [];
+			// 	let line_itemId = railsupport_buses[i].itemId;
+			// 	buses_involving_companies[line_itemId] = [];
 
-				let list_item = railsupport_buses[i].list;
-				for(let j=0;j<list_item.length;j++){
-					if(list_item[j].company != "集团全部"){
-						buses_involving_companies[line_itemId].push(list_item[j].company.substr(2,3));
-					}
-				}
+			// 	let list_item = railsupport_buses[i].list;
+			// 	for(let j=0;j<list_item.length;j++){
+			// 		if(list_item[j].company != "集团全部"){
+			// 			buses_involving_companies[line_itemId].push(list_item[j].company.substr(2,3));
+			// 		}
+			// 	}
 
-			}
-			console.log('buses_involving_companies--',buses_involving_companies)
+			// }
+			// console.log('buses_involving_companies--',buses_involving_companies)
 			return buses_involving_companies;
 		},
 	},

@@ -99,7 +99,6 @@ export default {
 			supportList(state){
 				if(state.guojiangSupport.length){
 					let data = JSON.parse(JSON.stringify(state.guojiangSupport[0].supportList));
-					this.supportList2 = data;
 
 					let qiDong = [];
 					for(let i=0;i<data.length;i++){
@@ -137,7 +136,8 @@ export default {
 					setTimeout(()=>{
 						this.sendSelectedIds();
 					},0);
-
+					
+					this.supportList2 = data;
 					return data;
 				}
 				return [];

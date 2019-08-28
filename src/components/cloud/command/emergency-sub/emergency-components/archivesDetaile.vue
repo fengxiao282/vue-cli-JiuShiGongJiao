@@ -5,7 +5,8 @@
 		<div class="archives-detaile-left">
 			<div class="detaile-left-1">线路配置信息</div>
 			<div class="detaile-left-com1"><span class="fontColor1">线路编号</span> &nbsp; -</div>
-			<div class="detaile-left-com1"><span class="fontColor1">线路名称</span> &nbsp; <span>{{archivesDetaile.line}}</span></div>
+			<div class="detaile-left-com1" v-if="archivesDetaile.line.length > 9"><span class="fontColor1">线路名称</span> &nbsp; <span class="cursor-pointer" @mouseenter="enter(archivesDetaile.line,$event)" @mouseleave='out'>{{archivesDetaile.line}}</span></div>
+			<div class="detaile-left-com1" v-else><span class="fontColor1">线路名称</span> &nbsp; <span>{{archivesDetaile.line}}</span></div>
 			<div class="detaile-left-com1"><span class="fontColor1">开始时间</span> &nbsp; {{archivesDetaile.show_createTime}}</div>
 			<div class="detaile-left-com1"><span class="fontColor1">结束时间</span> &nbsp; -</div>
 
@@ -106,6 +107,7 @@
 
 		</div>
 	</div>
+	<div id="tip_line_name">{{msg}}</div>
 </div>
 </template>
 <script>
@@ -125,11 +127,26 @@ export default {
 			showData:{},   //用于在页面上显示的数据
 			begin_data:{}, //存放起点位置数据
 			end_data:{},   //存放终点位置数据
+			msg:'',
+			tipDom:{},
 		}
 	},
 	mounted(){
+		this.tipDom = document.getElementById('tip_line_name');
 	},
 	methods:{
+		out(){
+			this.tipDom.style.visibility = 'hidden';
+		},
+		enter(msg,event){
+			this.msg = msg;
+			let cx = event.clientX - 30;
+			let cy = event.clientY - 90;
+
+			this.tipDom.style.left = `${cx}px`;
+			this.tipDom.style.top = `${cy}px`;
+			this.tipDom.style.visibility = 'visible';
+		},
 		change_detaile_delected(bool){
 			if(this.delected_start == bool){
 				return;
@@ -688,5 +705,24 @@ export default {
 	height: 85px;
 	line-height: 80px;
 	width: 100%;
+}
+#tip_line_name{
+	position:fixed;
+	visibility: hidden;
+	background: #000015;
+	box-shadow: 0 0 10px 0 #4089FF;
+	font-family: PingFangSC-Regular;
+	font-size: 40px;
+	color: #4089FF;
+	line-height: 50px;
+	height: 50px;
+	border-radius:2px;
+	padding: 5px 10px;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 999;
+}
+.cursor-pointer{
+	cursor: pointer;
 }
 </style>

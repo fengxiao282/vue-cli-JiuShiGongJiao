@@ -32,13 +32,40 @@ export default {
 			// e.currentTarget 是你绑定事件的元素
 
 			// console.log(event.target.offsetWidth,event.target.offsetHeight);
-			// console.log(event.target.parentNode.offsetWidth)
-
-			// event.target.style.marginLeft = `-${event.target.offsetWidth}px`;
+			let parent_node_width = event.target.parentNode.offsetWidth;
+			event.target.style.opacity = 1;
+			event.target.style.marginLeft = `-${event.target.offsetWidth}px`;
 			setTimeout(function(){
-				console.log(event.target)
-				// event.target.style.marginLeft = `${event.target.offsetWidth}px`;
-			},0);
+				// console.log(event.target)
+
+				const promise = new Promise(function(resolve, reject) {
+
+					event.target.style.display = 'none';
+					event.target.style.marginLeft = `${parent_node_width}px`;
+
+					setTimeout(function(){
+						event.target.style.display = 'inline';
+						event.target.style.marginLeft = `0px`;
+					},3000)
+
+					// if (/* 异步操作成功 */){
+					// 	resolve();
+					// } else {
+					// 	reject(error);
+					// }
+				});
+
+				// promise.then(function() {
+
+				// 	event.target.style.opacity = 1;
+				// 	event.target.style.marginLeft = `0px`;
+
+				// }, function(error) {
+				// 	// failure
+				// });
+
+				
+			},3000);
 
 		}
 	}

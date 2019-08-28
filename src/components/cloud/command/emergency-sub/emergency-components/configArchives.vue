@@ -2,22 +2,22 @@
 <div id="config-archives"> <!-- 配置档案列表 -->
 	<div class="archives-list-body">
 		<div class="archives-list-header">
-			<div class="archives-list-header-cell header-cell-sort-data" @click="sort_data">
+			<div class="archives-list-header-cell-1" @click="sort_data">
 				<img :style="{transform: `rotate(${arror_angle}deg)`}" src="../../../../../../resource/images/cloud/monitor/safetycontrol/三角.png" class="img-icon">
 				配置时间
 			</div>
-			<div class="archives-list-header-cell">预案集合名称</div>
-			<div class="archives-list-header-cell">预案线路名称</div>
-			<div class="archives-list-header-cell">线路起点</div>
-			<div class="archives-list-header-cell">线路终点</div>
+			<div class="archives-list-header-cell-2">预案集合名称</div>
+			<div class="archives-list-header-cell-3">预案线路名称</div>
+			<div class="archives-list-header-cell-4">线路起点</div>
+			<div class="archives-list-header-cell-5">线路终点</div>
 		</div>
 		<div class="archives-list-container">
 			<div v-for="(item,index) in archivesList" :key="index" @click="nav_details(item)" class="archives-list-item">
-				<div class="archives-list-item-cell">{{item.ForMat_Time.time}}</div>
-				<div class="archives-list-item-cell">{{item.itemName}}</div>
-				<div class="archives-list-item-cell">{{item.line}}</div>
-				<div class="archives-list-item-cell">{{item.beginStation}}</div>
-				<div class="archives-list-item-cell">{{item.endStation}}</div>
+				<div class="archives-list-item-cell-1">{{item.ForMat_Time.time}}</div>
+				<div class="archives-list-item-cell-2">{{item.itemName}}</div>
+				<div class="archives-list-item-cell-3">{{item.line}}</div>
+				<div class="archives-list-item-cell-4">{{item.beginStation}}</div>
+				<div class="archives-list-item-cell-5">{{item.endStation}}</div>
 			</div>
 		</div>
 	</div>
@@ -66,8 +66,11 @@ export default {
 			let minutes = greenwichTime.getMinutes();
 			let minutes2 = minutes < 10 ? `0${minutes}` : minutes;
 
+			let seconds = greenwichTime.getSeconds();
+			let seconds2 = seconds < 10 ? `0${seconds}` : seconds;
+
 			return {
-				'time':`${year}.${month2}.${dt2} ${hours2}:${minutes2}`,
+				'time':`${year}.${month2}.${dt2} ${hours2}:${minutes2}:${seconds2}`,
 				'timeStamp':greenwichTime.getTime()
 			}
 		},
@@ -122,13 +125,36 @@ export default {
 	font-size: 40px;
 	color: #4089FF;
 }
-.header-cell-sort-data{
+.archives-list-header-cell-1{
 	cursor: pointer;
-}
-.archives-list-header-cell{
-	flex: 1;
+	width: 230px;
 	line-height: 110px;
 	text-align: center;
+	flex-grow:1;
+}
+.archives-list-header-cell-2{
+	width: 350px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-header-cell-3{
+	width: 600px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-header-cell-4{
+	width: 200px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-header-cell-5{
+	width: 200px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
 }
 .img-icon{
 	width: 20px;
@@ -156,9 +182,34 @@ export default {
 	margin: 0 auto 20px;
 	cursor: pointer;
 }
-.archives-list-item-cell{
-	flex: 1;
+.archives-list-item-cell-1{
+	width: 230px;
 	line-height: 110px;
 	text-align: center;
+	flex-grow:1;
+}
+.archives-list-item-cell-2{
+	width: 350px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-item-cell-3{
+	width: 600px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-item-cell-4{
+	width: 200px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
+}
+.archives-list-item-cell-5{
+	width: 200px;
+	line-height: 110px;
+	text-align: center;
+	flex-grow:1;
 }
 </style>
