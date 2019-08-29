@@ -1,24 +1,78 @@
 
-let moni_stations = [
-  {
-    "name":"上海火车站",
-    "lnglat":['经度','纬度'],
-    "busNum":"4",
-    "lines":"01路、02路",
+	/*
+let 最终数据 = {
+  "companyNum":"3",
+  "officeNum":"2",
+  "stationNum":"3",
+  "lineNum":"6",
+  "busNum":"15",
+  "buses":start_buses,
+  
+  "selected_qiqizhan":'上海火车站',
+  "selected_guanlianline":'01路',
+  "involving_companies":['一公司','二公司','三公司'],
+  "stations":[
+    {
+      "name":"上海火车站",
+      "lnglat":['经度','纬度'],
+      "busNum":"4",
+      "lines":"01路、02路",
+    },
+    {
+      "name":"宜山路站",
+      "lnglat":['经度','纬度'],
+      "busNum":"3",
+      "lines":"03路、04路",
+    },
+    {
+      "name":"江月路站",
+      "lnglat":['经度','纬度'],
+      "busNum":"2",
+      "lines":"05路、06路",
+    }
+  ],
+  "guanlian_line":{
+    '上海火车站':{
+      'first_line':'01路',
+      'lines':{'01路':3,'02路':1},
+      'buses':{
+        '01路':['S2L-039G','S2L-039G','S2L-039G'],
+        '02路':['S2L-039G'],
+      }
+    },
+    '宜山路站':{
+      'first_line':'03路',
+      'lines':{'03路':2,'04路':1},
+      'buses':{
+        '03路':['S2L-039G','S2L-039G'],
+        '04路':['S2L-039G'],
+      }
+    },
+    '江月路站':{
+      'first_line':'05路',
+      'lines':{'05路':1,'06路':1},
+      'buses':{
+        '05路':['S2L-039G'],
+        '06路':['S2L-039G'],
+      }
+    },
   },
-  {
-    "name":"宜山路站",
-    "lnglat":['经度','纬度'],
-    "busNum":"3",
-    "lines":"03路、04路",
-  },
-  {
-    "name":"江月路站",
-    "lnglat":['经度','纬度'],
-    "busNum":"2",
-    "lines":"05路、06路",
-  }
-];
+  "offices":[
+    {
+      "name":"一公司二车队",
+      "lnglat":['经度','纬度'],
+    },
+    {
+      "name":"二公司二车队",
+      "lnglat":['经度','纬度'],
+    },
+    {
+      "name":"三公司二车队",
+      "lnglat":['经度','纬度'],
+    }
+  ],
+}
+	*/
 // **********************************************************************
 
 // start_stations
