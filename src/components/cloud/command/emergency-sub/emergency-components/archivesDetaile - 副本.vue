@@ -88,8 +88,10 @@
 				<div class="detaile-right-bottom-right">
 					<div class="bottom-right-1">
 						<div class="bottom-left-1-sheji-gongsi fontColor1">车队办公点</div>
-						<div class="bottom-left-1-sheji-gongsi-list">
-							<span v-for="(item,index) in showData.offices" :key="index" class="shejigongsi-item">{{item.name}}</span>
+						<div class="bottom-left-1-sheji-gongsi-list cursor-pointert">
+							<marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollamount=15>
+								<span v-for="(item,index) in showData.offices" :key="index" class="shejigongsi-item">{{item.name}}</span>
+							</marquee>
 						</div>
 					</div>
 					<div class="bottom-right-2">
@@ -608,6 +610,9 @@ export default {
 	box-sizing: border-box;
 	padding-left: 20px;
 }
+.bottom-left-1:last-child{
+	margin-right: 0;
+}
 .bottom-left-1-sheji-gongsi{
 	height: 50%;
 	line-height: 75px;
@@ -620,13 +625,10 @@ export default {
 	flex-wrap: wrap;
 	height: 50%;
 	line-height: 75px;
-	overflow: auto;
+	overflow: hidden;
 }
 .bottom-left-1-sheji-gongsi-list::-webkit-scrollbar{
 	display: none;
-}
-.bottom-left-1:last-child{
-	margin-right: 0;
 }
 .shejigongsi-item{
 	margin-right: 40px;

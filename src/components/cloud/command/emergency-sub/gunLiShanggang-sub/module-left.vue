@@ -33,7 +33,10 @@
 					<div class="list-cell-com right-list-cell-2">{{item.name == 'null'?'':item.name}}</div>
 					<div class="list-cell-com right-list-cell-3">{{item.office == 'null'?'':item.office}}</div>
 					<div class="list-cell-com right-list-cell-4">{{item.job == 'null'?'':item.job}}</div>
-					<div class="list-cell-com right-list-cell-5">{{item.radioCode == 'null'?'':item.radioCode}}</div>
+					<div class="list-cell-com right-list-cell-5 cursor-pointer"
+						v-if="item.radioCode.length > 8"
+						@mouseenter="enter(item.radioCode,$event)" @mouseleave='out'>{{item.radioCode == 'null'?'':item.radioCode}}</div>
+					<div class="list-cell-com right-list-cell-5" v-else>{{item.radioCode == 'null'?'':item.radioCode}}</div>
 				</div>
 			</div>
 		</div>
@@ -65,19 +68,31 @@ export default {
 			show_modal_filter:false,
 			selected_planName:'全部已启动预案',
 			plans_name:['全部已启动预案'],
+			timer_load_data:null,
 		}
 	},
 	created(){
-		// 现场管理人员上岗 left
-		this.$store.dispatch('emergencyPlan/manager_left',null);
-
-		// 现场管理人员上岗 right
-		this.$store.dispatch('emergencyPlan/manager_right',null);
+		this.load_data();
+		this.timer_load_data = setInterval(()=>{
+			this.load_data();
+		},30000);
+	},
+	beforeDestroy(){
+		if(this.timer_load_data){
+			clearInterval(this.timer_load_data);
+		}
 	},
 	mounted(){
 		this.tipDom = document.getElementById('tip-msg-managerLeft');
 	},
 	methods:{
+		load_data(){
+			// 现场管理人员上岗 left
+			this.$store.dispatch('emergencyPlan/manager_left',null);
+
+			// 现场管理人员上岗 right
+			this.$store.dispatch('emergencyPlan/manager_right',null);
+		},
 		out(){
 			this.tipDom.style.visibility = 'hidden';
 		},
@@ -115,8 +130,7 @@ export default {
 			if(!manager_right){
 				return [];
 			}
-
-			
+			this.plans_name = ['全部已启动预案']; //重置
 			let reserve_plans = {
 				'全部已启动预案':manager_right
 			};

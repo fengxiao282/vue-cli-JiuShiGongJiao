@@ -88,8 +88,10 @@
 				<div class="detaile-right-bottom-right">
 					<div class="bottom-right-1">
 						<div class="bottom-left-1-sheji-gongsi fontColor1">车队办公点</div>
-						<div class="bottom-left-1-sheji-gongsi-list">
-							<span v-for="(item,index) in showData.offices" :key="index" class="shejigongsi-item">{{item.name}}</span>
+						<div class="bottom-left-1-sheji-gongsi-list cursor-pointert">
+							<marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollamount=15>
+								<span v-for="(item,index) in showData.offices" :key="index" class="shejigongsi-item">{{item.name}}</span>
+							</marquee>
 						</div>
 					</div>
 					<div class="bottom-right-2">
@@ -207,139 +209,111 @@ export default {
 			return `${month2}.${dt2} ${hours2}:${minutes2}`;
 		},
 		construct_data(stations_begin_or_end,buses_begin_or_end,offices_begin_or_end){  //构造特定格式数据 begin_data 与 end_data
-			//（1.1）根据 起讫站 将数据分类存储到 temp_stations
+			let xx_data = JSON.parse(JSON.stringify(stations_begin_or_end));
+			xx_data.selected_qiqizhan = xx_data[0].name;  //'范围内起讫站' 初始选中项
+			xx_data.selected_guanlianline = '';	//所选线路可用车辆 初始选中项
+			xx_data.involving_companies = [];
+
+			let moni_stations = [
+			// 	"selected_qiqizhan":selected_qiqizhan,  		//'范围内起讫站' 初始选中项
+			// 	"selected_guanlianline":selected_guanlianline,	//所选线路可用车辆 初始选中项
+			// 	"involving_companies":no_repeat_companies,
+			// 	"stations":stations_begin_or_end,
+			// 	"guanlian_line":temp_guanlian_lineS,
+			// 	"offices":offices_begin_or_end,
+
+
+				// "selected_qiqizhan":'',
+				// "selected_guanlianline":"",				
+				// "involving_companies":[],
+				// "guanlian_line":{},
+				{
+					"name":"上海火车站",
+					"lnglat":['经度','纬度'],
+					"busNum":"4",
+					"lines":"01路、02路",
+				},
+				{
+					"name":"宜山路站",
+					"lnglat":['经度','纬度'],
+					"busNum":"3",
+					"lines":"03路、04路",
+				},
+				{
+					"name":"江月路站",
+					"lnglat":['经度','纬度'],
+					"busNum":"2",
+					"lines":"05路、06路",
+				}
+			];
+
 			let temp_stations = {};
+			let selected_guanlianline = ''; //所选线路可用车辆 初始选中项
 			let not_remove_repeat_companies = []; //未去重的 company 统计数组。用于统计 '涉及公司'
 
-			let selected_qiqizhan = ''; //'范围内起讫站' 初始选中项
-			let selected_guanlianline = ''; //所选线路可用车辆 初始选中项
+			let temp_guanlian_lineS = {}; //关联线路
 
-			for(let i=0;i<stations_begin_or_end.length;i++){
-				
-				let stations_item = stations_begin_or_end[i];
-				temp_stations[stations_item.name] = [];
-				
-				for(let j=0;j<buses_begin_or_end.length;j++){
-
-					if(stations_item.name == buses_begin_or_end[j].station){
-						temp_stations[stations_item.name].push(buses_begin_or_end[j])
-					}
-
-					not_remove_repeat_companies.push(buses_begin_or_end[j].company);
-
-				}
-				
-			}
-
-// let stations = [
-// 	{
-// 		"name":"上海火车站",
-// 		"lnglat":['经度','纬度'],
-// 		"busNum":"4",
-// 		"lines":['line1','line1'],
-// 		"buses":['bus1','bus2']
-// 	},
-// 	{
-// 		"name":"宜山路站",
-// 		"lnglat":['经度','纬度'],
-// 		"busNum":"3",
-// 		"lines":['line1','line1'],
-// 		"buses":['bus1','bus2']
-// 	},
-// 	{
-// 		"name":"江月路站",
-// 		"lnglat":['经度','纬度'],
-// 		"busNum":"2",
-// 		"lines":['line1','line1'],
-// 		"buses":['bus1','bus2']
-// 	}
-// ]
-
-			//not_remove_repeat_companies 去重，统计 '涉及公司'
-			let no_repeat_companies = [...new Set(not_remove_repeat_companies)];
-			// console.log('temp_stations--',temp_stations)
-
-			//（1.2）根据每个 '范围内起讫站' 选项 对'关联线路' 进行分类，然后根据 每个 '关联线路' 统计每个 '关联线路' 选项下对应的车辆(编码)
-			let temp_guanlian_lineS = {};
-			let init_qiqizhan_times = true;
 			let init_guanlianline_times = true;
-			for(let key in temp_stations){
-				//（1.2.1）为 '范围内起讫站' 设置选中初始值
-				if(init_qiqizhan_times){
-					selected_qiqizhan = key;
-					init_qiqizhan_times = false;
-				}
-				//（1.2.2）根据每个 '范围内起讫站' 选项 对'关联线路' 进行分类
-				let single_station_lines = temp_stations[key];
-				temp_guanlian_lineS[key] = {
-					'lines':{},
-					'buses':{}
-				};
 
-				let init_firstLine_times = true;
-				// 根据 每个 '关联线路' 统计每个 '关联线路' 选项下对应的车辆(编码)
-				for(let n=0;n<single_station_lines.length;n++){
-					let line_name = single_station_lines[n].line;
-					let vno_name = single_station_lines[n].vno;
+			// (1)
+			for(let i=0;i<stations_begin_or_end.length;i++){
 
-					//（2.1）为 '起讫站关联线路' 设置选中初始值。作用:确定 页面首次打开时 '所选线路可用车辆' 的数据是哪条线路下的数据
+				let stations_item = stations_begin_or_end[i];
+
+				//(1.1)获取每个 stations 内的 lines
+				if(stations_item.lines){
+					stations_item.lines_arr = stations_item.lines.split("、");
+
+					//(1.2)设置 selected_guanlianline
 					if(init_guanlianline_times){
-						selected_guanlianline = line_name;
+						begin_or_end_data.selected_guanlianline = stations_item.lines_arr[0];
 						init_guanlianline_times = false;
 					}
 
-					// （2.2）为 guanlian_line 下每个选项添加 first_line，用于保存每个 '范围内起讫站' 站点下第一个 '关联线路'
-					// 用途：在切换 '范围内起讫站' 选项时，重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
-					if(init_firstLine_times){
-						temp_guanlian_lineS[key].first_line = line_name;
-						init_firstLine_times = false;
-					}
-					
-
-					if(!temp_guanlian_lineS[key].lines[line_name]){
-						//初始化每条线路，并设置每条线路下初始车辆数为1
-						temp_guanlian_lineS[key].lines[line_name] = 1;
-
-						//统计每条线路内对应的车辆
-						temp_guanlian_lineS[key].buses[line_name] = [vno_name];
-
-					}else{
-
-						temp_guanlian_lineS[key].lines[line_name]++;
-						temp_guanlian_lineS[key].buses[line_name].push(vno_name);
-					}
+				}else{
+					stations_item.lines_arr = [];
 				}
-			}
-			// console.log('temp_guanlian_lineS--',temp_guanlian_lineS)
 
-			/* （1.3）判断 stations_begin_or_end 中是否有数据，无数据时后台返回数据如下：
-				let stations_begin_or_end = [
-					{
-						"name":null,
-						"lnglat":[],
-						"busNum":""
+				//(1.3)获取每个站点下的 buses
+				temp_stations[stations_item.name] = [];
+				for(let j=0;j<buses_begin_or_end.length;j++){
+					if(stations_item.name == buses_begin_or_end[j].station){
+						temp_stations[stations_item.name].push(buses_begin_or_end[j])
 					}
-				]
-			*/
-			// for(let h = stations_begin_or_end.length - 1; h>=0; h--){
-			// 	if(!stations_begin_or_end[h].name){
-			// 		stations_begin_or_end.splice(h,1);
-			// 	}
+					not_remove_repeat_companies.push(buses_begin_or_end[j].company);
+				}
+
+			}
+
+			// for(let k=0; k<buses_begin_or_end.length; k++){
 			// }
-			
-			// console.log("stations--",stations_begin_or_end)
-			// console.log("guanlian_line--",temp_guanlian_lineS)
+
+
+			console.log("begin_or_end_data----",begin_or_end_data);
+
+			//（1.1）根据 起讫站 将数据分类存储到 temp_stations
+			// let temp_stations = {};
+			// let not_remove_repeat_companies = []; //未去重的 company 统计数组。用于统计 '涉及公司'
+
+			// let selected_qiqizhan = ''; //'范围内起讫站' 初始选中项
+			// let selected_guanlianline = ''; //所选线路可用车辆 初始选中项
+
+
+
+
 			// console.log("最后--")
 
-			let begin_or_end_data = {
-				"selected_qiqizhan":selected_qiqizhan,  		//'范围内起讫站' 初始选中项
-				"selected_guanlianline":selected_guanlianline,	//所选线路可用车辆 初始选中项
-				"involving_companies":no_repeat_companies,
-				"stations":stations_begin_or_end,
-				"guanlian_line":temp_guanlian_lineS,
-				"offices":offices_begin_or_end,
-			};
+			// let begin_or_end_data = {
+			// 	"selected_qiqizhan":selected_qiqizhan,  		//'范围内起讫站' 初始选中项
+			// 	"selected_guanlianline":selected_guanlianline,	//所选线路可用车辆 初始选中项
+			// 	"involving_companies":no_repeat_companies,
+			// 	"stations":stations_begin_or_end,
+			// 	"guanlian_line":temp_guanlian_lineS,
+			// 	"offices":offices_begin_or_end,
+			// };
 			return begin_or_end_data;
+
+			return {};
 		},		
 	},
 	computed:{
@@ -437,9 +411,9 @@ export default {
 
 			//构造特定格式数据 begin_data，便于页面切换展示不同数据（begin_data 与 end_data）
 			let begin_data = this.construct_data(stations_begin,buses_begin,offices_begin);
-			this.selected_qiqizhan = begin_data.selected_qiqizhan;
-			this.selected_guanlianline = begin_data.selected_guanlianline;
-			this.begin_data = begin_data;
+			// this.selected_qiqizhan = begin_data.selected_qiqizhan;
+			// this.selected_guanlianline = begin_data.selected_guanlianline;
+			// this.begin_data = begin_data;
 
 			//【2】终点位置数据
 			let sit_end_msg = archives_detaile.end;
@@ -448,8 +422,8 @@ export default {
 			let offices_end = sit_end_msg.offices;
 
 			//构造特定格式数据 end_data，便于页面切换展示不同数据（begin_data 与 end_data）
-			let end_data = this.construct_data(stations_end,buses_end,offices_end);
-			this.end_data = end_data;
+			// let end_data = this.construct_data(stations_end,buses_end,offices_end);
+			// this.end_data = end_data;
 
 			this.showData = begin_data;
 			return archives_detaile;
@@ -608,6 +582,9 @@ export default {
 	box-sizing: border-box;
 	padding-left: 20px;
 }
+.bottom-left-1:last-child{
+	margin-right: 0;
+}
 .bottom-left-1-sheji-gongsi{
 	height: 50%;
 	line-height: 75px;
@@ -620,13 +597,10 @@ export default {
 	flex-wrap: wrap;
 	height: 50%;
 	line-height: 75px;
-	overflow: auto;
+	overflow: hidden;
 }
 .bottom-left-1-sheji-gongsi-list::-webkit-scrollbar{
 	display: none;
-}
-.bottom-left-1:last-child{
-	margin-right: 0;
 }
 .shejigongsi-item{
 	margin-right: 40px;

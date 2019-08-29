@@ -343,7 +343,7 @@ let emergencyPlan = {
             });
         },
         archives_detaile(context,params){ //预案线路详细清单
-            console.log('params--',params)
+            // console.log('params--',params)
             httpbase(`${baseUrl}`,'POST' , params, null, 10000, {"Content-Type":"application/json;charset=UTF-8"}, 'raw')().then(function(res){
                 if(res.status == 200){
                     context.commit('archives_detaile', res.data[0]);

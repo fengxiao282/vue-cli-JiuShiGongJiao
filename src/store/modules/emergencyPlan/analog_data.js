@@ -1,19 +1,44 @@
+
+let moni_stations = [
+  {
+    "name":"上海火车站",
+    "lnglat":['经度','纬度'],
+    "busNum":"4",
+    "lines":"01路、02路",
+  },
+  {
+    "name":"宜山路站",
+    "lnglat":['经度','纬度'],
+    "busNum":"3",
+    "lines":"03路、04路",
+  },
+  {
+    "name":"江月路站",
+    "lnglat":['经度','纬度'],
+    "busNum":"2",
+    "lines":"05路、06路",
+  }
+];
+// **********************************************************************
+
 // start_stations
 let start_stations = [
   {
     "name":"上海火车站",
     "lnglat":['经度','纬度'],
-    "busNum":"4"
+    "busNum":"4",
+    "lines":"01路、02路",
   },
   {
     "name":"宜山路站",
     "lnglat":['经度','纬度'],
-    "busNum":"3"
-  },
+    "busNum":"3",
+    "lines":"03路、04路",
   {
     "name":"江月路站",
     "lnglat":['经度','纬度'],
-    "busNum":"2"
+    "busNum":"2",
+    "lines":"05路、06路",
   }
 ];
 
@@ -99,17 +124,20 @@ let end_stations = [
   {
     "name":"鲁班路站",
     "lnglat":['经度','纬度'],
-    "busNum":"3"
+    "busNum":"3",
+    "lines":"01路",
   },
   {
     "name":"成山路站",
     "lnglat":['经度','纬度'],
-    "busNum":"3"
+    "busNum":"3",
+    "lines":"03路、04路",
   },
   {
     "name":"沈杜公路",
     "lnglat":['经度','纬度'],
-    "busNum":"2"
+    "busNum":"2",
+    "lines":"06路、07路",
   }
 ];
 
@@ -215,5 +243,6 @@ let analog_data = {
     "buses":end_buses
   }
 }
+
 
 export { analog_data };
