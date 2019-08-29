@@ -123,7 +123,7 @@ export default {
 					}
 
 					// 请求 4.1.1.4 统计每条已启动线路应急支援车辆所属公司，在界面上高亮有车辆投入的公司
-					this.$store.dispatch('emergencyPlan/guojiangSupport_buses',qiDong);
+					this.$store.dispatch('emergencyPlan/get_lines',{'event_name':'guojiangSupport_buses','params':qiDong});
 
 					//发送已经启动项
 					// if(qiDong.length){
@@ -146,29 +146,10 @@ export default {
 		...mapGetters("emergencyPlan", ["guojiangSupport_buses"]),
 		involving_companies(){
 			let guojiangSupport_buses = this.guojiangSupport_buses;
-			if(!guojiangSupport_buses.length){
-				return false;
+			if(!guojiangSupport_buses){
+				return {};
 			}
-
-			//统计已启动线路应急支援车辆所属公司有哪些，在界面上高亮有车辆投入的公司
-			console.log('guojiangSupport_buses--',guojiangSupport_buses)
-			let buses_involving_companies = {}; //存放已启动线路应急支援车辆所属公司
-			let len = guojiangSupport_buses.length;
-
-			for(let i=0;i<len;i++){
-
-				let line_itemId = guojiangSupport_buses[i].itemId;
-				buses_involving_companies[line_itemId] = [];
-
-				let list_item = guojiangSupport_buses[i].list;
-				for(let j=0;j<list_item.length;j++){
-					if(list_item[j].company != "集团全部"){
-						buses_involving_companies[line_itemId].push(list_item[j].company.substr(2,3));
-					}
-				}
-
-			}
-			return buses_involving_companies;
+			return guojiangSupport_buses;
 		},
 	},
 }

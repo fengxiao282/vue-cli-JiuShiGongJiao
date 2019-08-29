@@ -30,9 +30,9 @@
 			<div class="right-list-container">
 				<div v-for="(item,index) in reserve_plans[selected_planName]" :key="index" class="right-list-item">
 					<div class="list-cell-com right-list-cell-1">{{item.show_company}}</div>
-					<div class="list-cell-com right-list-cell-2">{{item.name}}</div>
-					<div class="list-cell-com right-list-cell-3">{{item.office}}</div>
-					<div class="list-cell-com right-list-cell-4">{{item.job}}</div>
+					<div class="list-cell-com right-list-cell-2">{{item.name == 'null'?'':item.name}}</div>
+					<div class="list-cell-com right-list-cell-3">{{item.office == 'null'?'':item.office}}</div>
+					<div class="list-cell-com right-list-cell-4">{{item.job == 'null'?'':item.job}}</div>
 					<div class="list-cell-com right-list-cell-5">{{item.radioCode == 'null'?'':item.radioCode}}</div>
 				</div>
 			</div>
@@ -42,7 +42,7 @@
 			<div class="modal-filter-item"
 			 v-for="(item,index) in plans_name"
 			 :key="index"
-			 :style="{color:item == selected_planName ? '#008BFF' : '#ffffff'}"
+			 :style="{color:item == selected_planName ? '#ffffff' : '#008BFF'}"
 			 @click="shift_planNames(item)">{{item}}</div>
 		</div>
 
@@ -71,7 +71,7 @@ export default {
 		// 现场管理人员上岗 left
 		this.$store.dispatch('emergencyPlan/manager_left',null);
 
-		// 现场管理人员上岗 left
+		// 现场管理人员上岗 right
 		this.$store.dispatch('emergencyPlan/manager_right',null);
 	},
 	mounted(){
