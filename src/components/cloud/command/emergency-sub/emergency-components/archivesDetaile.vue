@@ -236,9 +236,14 @@ export default {
 				// 	"江月路站":["05路","06路"]
 				//  ......
 				// }
-				classify_lines_by_station[station_name] = [];
+				if(!classify_lines_by_station[station_name]){
+					classify_lines_by_station[station_name] = [];
+				}
 				if(station_item.lines){
-					classify_lines_by_station[station_name] = station_item.lines.split("、");
+					// classify_lines_by_station[station_name] = station_item.lines.split("、");
+					let station_lines_array = station_item.lines.split("、")
+					classify_lines_by_station[station_name] = classify_lines_by_station[station_name].concat(station_lines_array);
+					// station_item.busNum = parseInt(station_item.busNum) + parseInt(station_lines_array.length);
 
 					//(1.2)设置 selected_guanlianline
 					// if(init_guanlianline_times){
