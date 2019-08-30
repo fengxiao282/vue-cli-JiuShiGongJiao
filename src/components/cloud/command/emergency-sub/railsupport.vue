@@ -1,12 +1,12 @@
 <template>
 <div id="railsupport-items"> <!-- 轨交支援 -->
 	<!-- 北横轨道交通支援 暂时写死，跳转博协 -->
-	<div @click="navTo()" class="style-com style-1 color1">
+	<div @click="navTo()" class="style-com style-2 color2">
 		<div v-if="-1 == selectedIndex" class="rotate-com rotate-sector1"></div>
 		<div class="yingJi-item-com"
-			:class="{'selectedStyle yingJi-item-1':-1 == selectedIndex,
-					 'noSelectedStyle yingJi-item-2':-1 != selectedIndex}">
-			<div class="d1-com d1-color1">北横轨道交通支援</div>
+			:class="{'selectedStyle yingJi-item-3':-1 == selectedIndex,
+					 'noSelectedStyle yingJi-item-4':-1 != selectedIndex}">
+			<div class="d1-com d1-color2">北横轨道交通支援</div>
 			<div class="d-com">
 				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
 				<div class="val-1">{{beiHengItem?beiHengItem.lineNum:''}}</div>
@@ -24,25 +24,25 @@
 		</div>
 	</div>
 	<!-- 开关视频专用 -->
-	<div @click="openOrClose_video()" class="style-com style-1 color1">
+	<div @click="openOrClose_video()" class="style-com style-2 color2">
 		<div v-if="videoStatus" class="rotate-com rotate-sector1"></div>
 		<div class="yingJi-item-com"
-			:class="{'selectedStyle yingJi-item-1':videoStatus,
-					 'noSelectedStyle yingJi-item-2':!videoStatus}">
-			<div class="d1-com d1-color1">轨道交通支援</div>
+			:class="{'selectedStyle yingJi-item-3':videoStatus,
+					 'noSelectedStyle yingJi-item-4':!videoStatus}">
+			<div class="d1-com d1-color2">轨道交通支援</div>
 			<div class="d-com">
 				<div class="d-com-title">配套线路</div>&nbsp;&nbsp;
-				<div class="val-1">{{beiHengItem?beiHengItem.lineNum:''}}</div>
+				<div class="val-1">0/1</div>
 			</div>
 			<div class="d-com">
 				<div class="d-com-title">配套车辆</div>&nbsp;&nbsp;
-				<div class="val-1">{{beiHengItem?beiHengItem.busNum+'辆':''}}</div>
+				<div class="val-1">0辆</div>
 			</div>
 			<div class="d4">
 				<div class="join-company-com join-company-title">参与公司</div>
-				<span v-if="beiHengItem">
+				<!-- <span v-if="beiHengItem">
 					<div v-for="(item2,index2) in beiHengItem.joinCompany" :key="index2" class="join-company-com d4-val-2">{{item2}}</div>
-				</span>
+				</span> -->
 			</div>
 		</div>
 	</div>
