@@ -10,14 +10,14 @@
 	</div>
 	<div class="gunLiShanggang-body">
 		<!-- left -->
-		<div class="left">
+		<!-- <div class="left">
 			<div v-for="(item,index) in list1" :key="index" class="item-left">
 				<div v-if="item.address.length > 9" class="item-left-left cursor-pointer"
 					@mouseenter="enter(item.address,$event)" @mouseleave='out'>&nbsp;&nbsp;{{item.address}}</div>
-				<div  v-else class="item-left-left">&nbsp;&nbsp;{{item.address}}</div>
+				<div v-else class="item-left-left">&nbsp;&nbsp;{{item.address}}</div>
 				<div class="item-left-right" :style="{ 'color': item.actMans == item.planMans?'#28EA8D':'#FF3939' }">{{item.actMans}}/{{item.planMans}}</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- right -->
 		<div class="right">
 			<div class="right-list-header">
@@ -29,12 +29,28 @@
 			</div>
 			<div class="right-list-container">
 				<div v-for="(item,index) in reserve_plans[selected_planName]" :key="index" class="right-list-item">
-					<div class="list-cell-com right-list-cell-1">{{item.show_company}}</div>
-					<div class="list-cell-com right-list-cell-2">{{item.name == 'null'?'':item.name}}</div>
-					<div class="list-cell-com right-list-cell-3">{{item.office == 'null'?'':item.office}}</div>
-					<div class="list-cell-com right-list-cell-4">{{item.job == 'null'?'':item.job}}</div>
+					<div class="list-cell-com right-list-cell-1 cursor-pointer"
+						v-if="item.show_company.length > 3"
+						@mouseenter="enter(item.show_company,$event)" @mouseleave='out'>{{item.show_company}}</div>
+					<div class="list-cell-com right-list-cell-1" v-else>{{item.show_company}}</div>
+
+					<div class="list-cell-com right-list-cell-2 cursor-pointer"
+						v-if="item.name.length > 5"
+						@mouseenter="enter(item.name,$event)" @mouseleave='out'>{{item.name == 'null'?'':item.name}}</div>
+					<div class="list-cell-com right-list-cell-2" v-else>{{item.name == 'null'?'':item.name}}</div>
+
+					<div class="list-cell-com right-list-cell-3 cursor-pointer"
+						v-if="item.office.length > 7"
+						@mouseenter="enter(item.office,$event)" @mouseleave='out'>{{item.office == 'null'?'':item.office}}</div>
+					<div class="list-cell-com right-list-cell-3" v-else>{{item.office == 'null'?'':item.office}}</div>
+
+					<div class="list-cell-com right-list-cell-4 cursor-pointer"
+						v-if="item.job.length > 10"
+						@mouseenter="enter(item.job,$event)" @mouseleave='out'>{{item.job == 'null'?'':item.job}}</div>
+					<div class="list-cell-com right-list-cell-4" v-else>{{item.job == 'null'?'':item.job}}</div>
+
 					<div class="list-cell-com right-list-cell-5 cursor-pointer"
-						v-if="item.radioCode.length > 8"
+						v-if="item.radioCode.length > 17"
 						@mouseenter="enter(item.radioCode,$event)" @mouseleave='out'>{{item.radioCode == 'null'?'':item.radioCode}}</div>
 					<div class="list-cell-com right-list-cell-5" v-else>{{item.radioCode == 'null'?'':item.radioCode}}</div>
 				</div>
@@ -88,7 +104,7 @@ export default {
 	methods:{
 		load_data(){
 			// 现场管理人员上岗 left
-			this.$store.dispatch('emergencyPlan/manager_left',null);
+			// this.$store.dispatch('emergencyPlan/manager_left',null);
 
 			// 现场管理人员上岗 right
 			this.$store.dispatch('emergencyPlan/manager_right',null);
@@ -140,7 +156,11 @@ export default {
 				let item = manager_right[i];
 
 				//（1.1）公司名字截取处理
-				item.show_company  = item.company.substr(2,3);
+				if(item.company == 'null'){
+					item.show_company = '';
+				}else{
+					item.show_company  = item.company.substr(2,3);
+				}
 
 				//（1.2）按 预案名 进行数据分类
 				let item_name = item.itemName;
@@ -258,7 +278,8 @@ export default {
 	justify-content: flex-start;
 	align-items: center;
 	height: 760px;
-	width: 950px;
+	/* width: 950px; */
+	width: 100%;
 	box-shadow: inset 0 0 20px 0 rgba(0,139,255,0.50);
 	border-radius: 4px;
 	padding: 20px;
@@ -277,7 +298,7 @@ export default {
 .right-list-container{
 	width: 100%;
 	flex: 1;
-	overflow: auto;
+	overflow-y: auto;
 }
 .right-list-container::-webkit-scrollbar{
 	display: none;
@@ -292,27 +313,32 @@ export default {
 	box-shadow: inset 0 0 20px 0 #008BFF;
 	border-radius: 10px;
 	margin: 0 auto 10px;
+	overflow: hidden;
 }
 .list-cell-com{
 	line-height: 80px;
 	text-align: center;
 	flex-grow:1;
+	box-sizing: border-box;
 	overflow: hidden;
+	white-space:nowrap;
 }
 .right-list-cell-1{
-	width: 120px;
+	width: 130px;
 }
 .right-list-cell-2{
-	width: 120px;
+	width: 170px;
+	margin: 0 20px;
 }
 .right-list-cell-3{
-	width: 135px;
+	width: 250px;
 }
 .right-list-cell-4{
-	width: 240px;
+	width: 360px;
+	margin: 0 20px;
 }
 .right-list-cell-5{
-	width: 160px;
+	width: 360px;
 }
 
 /* modal-filter */

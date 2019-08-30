@@ -356,4 +356,3 @@ let emergencyPlan = {
 }
 
 export default emergencyPlan;
-
