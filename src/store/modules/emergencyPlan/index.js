@@ -1,6 +1,6 @@
 import { httpbase } from '../../../utils/ajax.js';
 let baseUrl = 'http://203.156.246.55:2205/ScreenCenter/getScreenData';
-
+import { analog_data } from './analog_data.js';
 // 状态管理
 let emergencyPlan = {
 	namespaced: true,
@@ -83,6 +83,7 @@ let emergencyPlan = {
         },
         archives_detaile(state){
             return state.archives_detaile;
+            // return analog_data;
         },
     },
     mutations: {

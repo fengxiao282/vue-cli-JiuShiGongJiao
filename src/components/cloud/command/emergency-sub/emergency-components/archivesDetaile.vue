@@ -73,13 +73,13 @@
 						<div class="archives-aaa-bbb fontColor1">起讫站关联线路</div>
 						<div class="archives-ccc-ddd" v-if="!!selected_qiqizhan">
 							<span class="item-container-com cursor-pointert"
-								v-for="(value,key,index) in showData.guanlian_line[selected_qiqizhan].lines"
+								v-for="(item,index) in showData.guanlian_line[selected_qiqizhan].lines"
 								:key="index"
 								:class="{'selected-item':guanLianLine_selected_index == index}"
-								@click="shift_guanLianLine(value,key,index)">
-								{{key}}
+								@click="shift_guanLianLine(item,index)">
+								{{item.line_name}}
 								<span class="vertical-line"></span>
-								<span class="color-green">{{value}}</span><span class="font20"> 辆</span>
+								<span class="color-green">{{item.value}}</span><span class="font20"> 辆</span>
 							</span>
 						</div>
 					</div>
@@ -170,22 +170,22 @@ export default {
 			// if(this.qiQiZhang_selected_index != index){
 				this.qiQiZhang_selected_index = index;
 				this.guanLianLine_selected_index = 0; //重置 '起讫站关联线路' 选项
-				let qiqizhan_name = item.name; //获取选中的 '范围内起讫站' 站点名
+				let qiqizhan_name = item.stationId; //获取选中的 '范围内起讫站' 站点名
 				this.selected_qiqizhan = qiqizhan_name;
 				//重置 '所选线路可用车辆' 内容为 此刻选中的 '范围内起讫站' 下第一条线关联路下的 '所选线路可用车辆'
 				this.selected_guanlianline = this.showData.guanlian_line[qiqizhan_name].first_line;
 			// }
 		},
-		shift_guanLianLine(value,key,index){
-			// if(this.guanLianLine_selected_index != index){
+		shift_guanLianLine(item,index){
+			if(this.guanLianLine_selected_index != index){
 				this.guanLianLine_selected_index = index;
-				this.selected_guanlianline = key;
-			// }
+				this.selected_guanlianline = item.line_name;
+			}
 		},
 		formatDate(date) { //日期格式化
 			let greenwichTime = new Date(date);
 			// let year = greenwichTime.getFullYear();
-			let month = greenwichTime.getMonth();
+			let month = greenwichTime.getMonth() + 1;
 			let month2 = month < 10 ? `0${month}` : month;
 			let dt = greenwichTime.getDate();
 			let dt2 = dt < 10 ? `0${dt}` : dt;
@@ -195,20 +195,20 @@ export default {
 			let minutes2 = minutes < 10 ? `0${minutes}` : minutes;
 			return `${month2}.${dt2} ${hours2}:${minutes2}`;
 		},
-		sortDate(arr){
+		sort_stations(arr){
 			return arr.sort(function(a,b){
 				return -parseInt(a.busNum) + parseInt(b.busNum);
 			})
 		},
-		sortDate_2(arr){
+		sort_lines(arr){
 			return arr.sort(function(a,b){
-				return a - b;
+				return -a.value + b.value;
 			})
 		},
 		construct_data(beginEnd_data){  //构造特定格式数据 begin_data 与 end_data
 			let begin_end = JSON.parse(JSON.stringify(beginEnd_data));
 			//【1】站点按 busNum 排序，获取排序后的 stations
-			let stations_begin_or_end = this.sortDate(begin_end.stations);
+			let stations_begin_or_end = this.sort_stations(begin_end.stations);
 			begin_end.stations = stations_begin_or_end;
 
 			let buses_begin_or_end = begin_end.buses;
@@ -220,7 +220,8 @@ export default {
 
 			//临时存储数据的变量
 			let init_guanlianline_times = true;
-			let classify_lines_by_station = {};
+			// let classify_lines_by_station = {};
+			let classify_lines_by_station = [];
 			let classify_buses_by_station = {};
 			let not_remove_repeat_companies = []; //未去重的 company 统计数组。用于统计 '涉及公司'
 			
@@ -228,53 +229,60 @@ export default {
 			for(let i=0;i<stations_begin_or_end.length;i++){
 				let station_item = stations_begin_or_end[i];
 				let station_name = station_item.name;
+				let station_id = station_item.stationId;
 
-				//(1.1)整理每个 stations 内的 lines,最终classify_lines_by_station格式:
+				//(1.1)整理每个 stations 内的 lines，初始每条线路内车辆数量为0，最终classify_lines_by_station格式:
 				// {
-				// 	"上海火车站":["01路","02路"],
-				// 	"宜山路站":["03路","04路"],
-				// 	"江月路站":["05路","06路"]
+				// 	"sa14ds2d":[
+				// 		{"line_name":"01路", value:0},
+				// 		{"line_name":"02路", value:0},
+				// 	],
+				// 	"s2a14ca2":[
+				// 		{"line_name":"03路", value:0},
+				// 		{"line_name":"04路", value:0},
+				// 	],
+				// 	"asc1c13d":[
+				// 		{"line_name":"05路", value:0},
+				// 		{"line_name":"06路", value:0},
+				// 	]
 				//  ......
 				// }
-				if(!classify_lines_by_station[station_name]){
-					classify_lines_by_station[station_name] = [];
+				if(!classify_lines_by_station[station_id]){
+					classify_lines_by_station[station_id] = [];
 				}
 				if(station_item.lines){
-					// classify_lines_by_station[station_name] = station_item.lines.split("、");
 					let station_lines_array = station_item.lines.split("、")
-					classify_lines_by_station[station_name] = classify_lines_by_station[station_name].concat(station_lines_array);
-					// station_item.busNum = parseInt(station_item.busNum) + parseInt(station_lines_array.length);
-
-					//(1.2)设置 selected_guanlianline
-					// if(init_guanlianline_times){
-					// 	begin_end.selected_guanlianline = classify_lines_by_station[station_name][0];
-					// 	init_guanlianline_times = false;
-					// }
+					for(let x = 0; x < station_lines_array.length; x++){
+						classify_lines_by_station[station_id].push({
+							"line_name":station_lines_array[x],
+							"bus_num":0
+						});
+					}
 
 				}else{
-					classify_lines_by_station[station_name] = [];
+					classify_lines_by_station[station_id] = [];
 				}
 
 				//(1.3)根据站点 station 将 buses 归类,最终classify_buses_by_station格式:
 				// {
-				// 			"上海火车站":[
+				// 			"5f61s616s":[
 				// 					{vno: "S1L-034G", station: "上海火车站", line: "02路", company: "一公司"}
 				// 			],
-				// 			"宜山路站":[
+				// 			"sd4c1616ds":[
 				// 					{vno: "S2L-035G", station: "宜山路站", line: "03路", company: "二公司"},
 				// 					{vno: "S2L-036G", station: "宜山路站", line: "03路", company: "二公司"},
 				// 					{vno: "S2L-037G", station: "宜山路站", line: "04路", company: "二公司"}
 				// 			],
-				// 			"江月路站":[
+				// 			"5cv6sd1vd6":[
 				// 					{vno: "S3L-038G", station: "江月路站", line: "05路", company: "三公司"},
 				// 					{vno: "S3L-039G", station: "江月路站", line: "06路", company: "三公司"}
 				// 			],
 				// 		......
 				// }
-				classify_buses_by_station[station_name] = [];
+				classify_buses_by_station[station_id] = [];
 				for(let j=0;j<buses_begin_or_end.length;j++){
-					if(station_name == buses_begin_or_end[j].station){
-						classify_buses_by_station[station_name].push(buses_begin_or_end[j])
+					if(station_id == buses_begin_or_end[j].stationId){
+						classify_buses_by_station[station_id].push(buses_begin_or_end[j])
 					}
 
 					//(1.4)统计每个站点下的公司(未去重)
@@ -284,43 +292,59 @@ export default {
 			}
 			//(1.4.1)公司去重,赋值
 			begin_end.involving_companies = [...new Set(not_remove_repeat_companies)];
-
+			
 			//【3】设置 guanlian_line
-			for(let station_name in classify_lines_by_station){
-				let classify_lines_item = classify_lines_by_station[station_name];
-				let classify_buses_item = classify_buses_by_station[station_name];
-				begin_end.guanlian_line[station_name] = {
+			for(let station_id in classify_lines_by_station){
+				let classify_lines_item = classify_lines_by_station[station_id];
+				let classify_buses_item = classify_buses_by_station[station_id];
+				begin_end.guanlian_line[station_id] = {
 					'first_line':'',
-					'lines':{},
+					'lines':[],
 					'buses':{}
 				};
+				for(let m=0; m<classify_lines_item.length; m++){
+					let line_item_name = classify_lines_item[m].line_name;
 
-				for(let m=0;m<classify_lines_item.length;m++){
-						let line_item_name = classify_lines_item[m];
-						begin_end.guanlian_line[station_name].lines[line_item_name] = 0;
-						begin_end.guanlian_line[station_name].buses[line_item_name] = [];
-					
-					for(let n=0;n<classify_buses_item.length;n++){
-						if(line_item_name == classify_buses_item[n].line){
-							begin_end.guanlian_line[station_name].lines[line_item_name]++;
-							begin_end.guanlian_line[station_name].buses[line_item_name].push(classify_buses_item[n].vno);
+					let temp_busNum = 0; //计数每条线路下车辆数
+					begin_end.guanlian_line[station_id].buses[line_item_name] = [];
+
+					for(let n=0; n < classify_buses_item.length; n++){
+						if(classify_buses_item[n].line == line_item_name){
+							temp_busNum++;
+							begin_end.guanlian_line[station_id].buses[line_item_name].push(classify_buses_item[n].vno);
 						}
 					}
-
+					
+					begin_end.guanlian_line[station_id].lines.push({
+						"line_name":line_item_name,
+						"value":temp_busNum
+					});
 				}
 			}
+	
+			//【4】排序 guanlian_line
+			let guanlian_line = begin_end.guanlian_line;
+			for(let station_id in guanlian_line){
+				let lines_item = guanlian_line[station_id].lines;
+				guanlian_line[station_id].lines = this.sort_lines(lines_item);
+			}
 			
-			//【4】设置first_line
-			for(let station_name in begin_end.guanlian_line){
-				let guanlian_line_item = begin_end.guanlian_line[station_name];
-				guanlian_line_item.first_line = Object.getOwnPropertyNames(guanlian_line_item.lines)[0];
+			//【5】设置first_line
+			for(let station_id in guanlian_line){
+				let guanlian_line_item = guanlian_line[station_id];
+				if(!guanlian_line_item.lines.length){
+					continue;
+				}
+				guanlian_line_item.first_line = guanlian_line_item.lines[0].line_name;
 			}
 
-			//【5】设置selected_guanlianline
-			let lines_array = begin_end.stations[0].lines.split("、");
-			begin_end.selected_guanlianline = this.sortDate_2(lines_array)[0];
+			//【6】设置selected_guanlianline
+			let station_id = begin_end.stations[0].stationId;
+			if(begin_end.guanlian_line[station_id].lines.length){
+				begin_end.selected_guanlianline = begin_end.guanlian_line[station_id].lines[0].line_name;
+			}
 
-			//【6】处理 offices 数据为 <marquee> 包括的 html 字符串，目的：解决首次滚动到容器左侧边界时突然消失重新滚动
+			//【7】处理 offices 数据为 <marquee> 包括的 html 字符串，目的：解决首次滚动到容器左侧边界时突然消失重新滚动
 			let offices_html_1 = '<marquee onMouseOut="this.start()" onMouseOver="this.stop()" scrollamount=15>';
 			let offices_html_2 = '';
 			let offices_html_3 = '</marquee>';
@@ -330,7 +354,7 @@ export default {
 			begin_end.offices_html = `${offices_html_1}${offices_html_2}${offices_html_3}`;
 			// console.log(begin_end.offices_html)
 			// console.log("classify_lines_by_station--",classify_lines_by_station);
-			// console.log("begin_end----",begin_end);
+			console.log("begin_end----",begin_end);
 			return begin_end;
 		},		
 	},
@@ -389,6 +413,7 @@ export default {
 						"busNum":"4",
 						"lines":"01路、02路",
 						"lines_arr":["01路","02路"],
+						"stationId":"1"
 					},
 					{
 						"name":"宜山路站",
@@ -396,6 +421,7 @@ export default {
 						"busNum":"3",
 						"lines":"03路、04路",
 						"lines_arr":["03路","04路"],
+						"stationId":"2"
 					},
 					{
 						"name":"江月路站",
@@ -403,28 +429,38 @@ export default {
 						"busNum":"2",
 						"lines":"05路、06路",
 						"lines_arr":["05路","06路"],
+						"stationId":"3"
 					}
 				],
 				"guanlian_line":{
-					'上海火车站':{
+					'1':{
 						'first_line':'01路',
-						'lines':{'01路':3,'02路':1},
+						'lines':[
+							{"line_name":"01路", value:3},
+							{"line_name":"02路", value:1}
+						],
 						'buses':{
 							'01路':['S2L-039G','S2L-039G','S2L-039G'],
 							'02路':['S2L-039G'],
 						}
 					},
-					'宜山路站':{
+					'2':{
 						'first_line':'03路',
-						'lines':{'03路':2,'04路':1},
+						'lines':[
+							{"line_name":"01路", value:3},
+							{"line_name":"02路", value:1}
+						],
 						'buses':{
 							'03路':['S2L-039G','S2L-039G'],
 							'04路':['S2L-039G'],
 						}
 					},
-					'江月路站':{
+					'3':{
 						'first_line':'05路',
-						'lines':{'05路':1,'06路':1},
+						'lines':[
+							{"line_name":"01路", value:3},
+							{"line_name":"02路", value:1}
+						],
 						'buses':{
 							'05路':['S2L-039G'],
 							'06路':['S2L-039G'],

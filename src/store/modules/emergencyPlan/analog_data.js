@@ -1,81 +1,3 @@
-// let 最终数据 = {
-  // "companyNum":"3",
-  // "officeNum":"2",
-  // "stationNum":"3",
-  // "lineNum":"6",
-  // "busNum":"15",
-  // "buses":start_buses,
-  // "offices":[
-  //   {
-  //     "name":"一公司二车队",
-  //     "lnglat":['经度','纬度'],
-  //   },
-  //   {
-  //     "name":"二公司二车队",
-  //     "lnglat":['经度','纬度'],
-  //   },
-  //   {
-  //     "name":"三公司二车队",
-  //     "lnglat":['经度','纬度'],
-  //   }
-  // ],
-  // "selected_qiqizhan":'上海火车站',
-  // "selected_guanlianline":'01路',
-  // "involving_companies":['一公司','二公司','三公司'],
-  // "stations":[
-  //   {
-  //     "name":"上海火车站",
-  //     "lnglat":['经度','纬度'],
-  //     "busNum":"4",
-  //     "lines":"01路、02路",
-  //     "lines_arr":["01路","02路"],
-  //   },
-  //   {
-  //     "name":"宜山路站",
-  //     "lnglat":['经度','纬度'],
-  //     "busNum":"3",
-  //     "lines":"03路、04路",
-  //     "lines_arr":["03路","04路"],
-  //   },
-  //   {
-  //     "name":"江月路站",
-  //     "lnglat":['经度','纬度'],
-  //     "busNum":"2",
-  //     "lines":"05路、06路",
-  //     "lines_arr":["05路","06路"],
-  //   }
-  // ],
-  // "guanlian_line":{
-  //   '上海火车站':{
-  //     'first_line':'01路',
-  //     'lines':{'01路':3,'02路':1},
-  //     'buses':{
-  //       '01路':['S2L-039G','S2L-039G','S2L-039G'],
-  //       '02路':['S2L-039G'],
-  //     }
-  //   },
-  //   '宜山路站':{
-  //     'first_line':'03路',
-  //     'lines':{'03路':2,'04路':1},
-  //     'buses':{
-  //       '03路':['S2L-039G','S2L-039G'],
-  //       '04路':['S2L-039G'],
-  //     }
-  //   },
-  //   '江月路站':{
-  //     'first_line':'05路',
-  //     'lines':{'05路':1,'06路':1},
-  //     'buses':{
-  //       '05路':['S2L-039G'],
-  //       '06路':['S2L-039G'],
-  //     }
-  //   },
-  // },
-  // "offices_html":'<marquee onmouseout="this.start()" onmouseover="this.stop()" scrollamount="15"><span>二公司二车队</span>&nbsp;&nbsp;&nbsp;<span>三公司二车队</span>&nbsp;&nbsp;&nbsp;</marquee>'
-// }
-
-// **********************************************************************
-
 // start_stations
 let start_stations = [
   {
@@ -83,18 +5,21 @@ let start_stations = [
     "lnglat":['经度','纬度'],
     "busNum":"3",
     "lines":"03路、04路",
+    "stationId":"1"
   },
   {
     "name":"江月路站",
     "lnglat":['经度','纬度'],
     "busNum":"2",
     "lines":"05路、06路",
+    "stationId":"2"
   },
   {
     "name":"上海火车站",
     "lnglat":['经度','纬度'],
     "busNum":"4",
     "lines":"01路、02路",
+    "stationId":"3"
   }
 ];
 
@@ -120,56 +45,65 @@ let start_buses = [
     "vno":"S1L-031G",
     "station":"上海火车站",
     "line":"01路",
-    "company":"一公司"
+    "company":"一公司",
+    "stationId":"1"
   },
   {
     "vno":"S1L-032G",
     "station":"上海火车站",
     "line":"01路",
-    "company":"一公司"
+    "company":"一公司",
+    "stationId":"1"
   },
   {
     "vno":"S1L-033G",
     "station":"上海火车站",
     "line":"01路",
-    "company":"一公司"
+    "company":"一公司",
+    "stationId":"1"
   },
   {
     "vno":"S1L-034G",
     "station":"上海火车站",
     "line":"02路",
-    "company":"一公司"
+    "company":"一公司",
+    "stationId":"1"
   },
   {
     "vno":"S2L-035G",
     "station":"宜山路站",
     "line":"03路",
-    "company":"二公司"
+    "company":"二公司",
+    "stationId":"2"
   },
   {
     "vno":"S2L-036G",
     "station":"宜山路站",
     "line":"03路",
-    "company":"二公司"
+    "company":"二公司",
+    "stationId":"2"
   },
   {
     "vno":"S2L-037G",
     "station":"宜山路站",
     "line":"04路",
-    "company":"二公司"
+    "company":"二公司",
+    "stationId":"2"
   },
   {
     "vno":"S3L-038G",
     "vno":"S3L-038G",
     "station":"江月路站",
     "line":"05路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"3"
   },
   {
     "vno":"S3L-039G",
     "station":"江月路站",
     "line":"06路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"3"
   }
 ];
 
@@ -182,18 +116,21 @@ let end_stations = [
     "lnglat":['经度','纬度'],
     "busNum":"3",
     "lines":"01路",
+    "stationId":"1"
   },
   {
     "name":"成山路站",
     "lnglat":['经度','纬度'],
     "busNum":"3",
     "lines":"03路、04路",
+    "stationId":"2"
   },
   {
     "name":"沈杜公路",
     "lnglat":['经度','纬度'],
     "busNum":"2",
     "lines":"06路、07路",
+    "stationId":"3"
   }
 ];
 
@@ -215,49 +152,57 @@ let end_buses = [
     "vno":"L1L-100S",
     "station":"鲁班路站",
     "line":"01路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"1"
   },
   {
     "vno":"L1L-101S",
     "station":"鲁班路站",
     "line":"01路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"1"
   },
   {
     "vno":"L1L-102S",
     "station":"鲁班路站",
     "line":"01路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"1"
   },
   {
     "vno":"L2L-103S",
     "station":"成山路站",
     "line":"03路",
-    "company":"五公司"
+    "company":"五公司",
+    "stationId":"2"
   },
   {
     "vno":"L2L-104S",
     "station":"成山路站",
     "line":"03路",
-    "company":"五公司"
+    "company":"五公司",
+    "stationId":"2"
   },
   {
     "vno":"L2L-105S",
     "station":"成山路站",
     "line":"04路",
-    "company":"五公司"
+    "company":"五公司",
+    "stationId":"2"
   },
   {
     "vno":"L3L-106S",
     "station":"沈杜公路",
     "line":"06路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"33"
   },
   {
     "vno":"L3L-107S",
     "station":"沈杜公路",
     "line":"07路",
-    "company":"三公司"
+    "company":"三公司",
+    "stationId":"3"
   }
 ];
 
